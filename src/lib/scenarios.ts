@@ -1,4 +1,5 @@
 import type { Scenario } from "@/lib/story-format";
+import { HA_AN_KHANH_SCENARIO } from "@/lib/scenarios/ha-an-khanh";
 import { MINH_LAN_SCENARIO } from "@/lib/scenarios/minh-lan";
 
 export type ScenarioCard = {
@@ -10,7 +11,7 @@ export type ScenarioCard = {
   mainCharacter: { name: string; age?: number; bio?: string };
 };
 
-const ALL_SCENARIOS: Scenario[] = [MINH_LAN_SCENARIO];
+const ALL_SCENARIOS: Scenario[] = [MINH_LAN_SCENARIO, HA_AN_KHANH_SCENARIO];
 
 export const SCENARIO_CARDS: ScenarioCard[] = ALL_SCENARIOS.map((s) => {
   const main = s.characters.find((c) => c.id === s.roleplay.mainCharacterId);

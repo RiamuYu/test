@@ -67,6 +67,7 @@ export type Choice = {
   effect?: Effect;
   requires?: Predicate;
   note?: string; // e.g. "🟢" or "🔴"
+  resultLine?: DialogueLine; // immediate reaction shown after picking choice
 };
 
 export type NodeKind = "scene" | "ending";
@@ -94,6 +95,7 @@ export type QuickEvent = {
     effect?: Effect;
     requires?: Predicate;
     note?: string;
+    resultLine?: DialogueLine;
   }>;
 };
 

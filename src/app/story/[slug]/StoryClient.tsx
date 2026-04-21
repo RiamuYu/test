@@ -12,25 +12,6 @@ import {
   type Scenario,
 } from "@/lib/story-format";
 
-function StatPill({ label, value }: { label: string; value: number }) {
-  const tone =
-    value >= 75
-      ? "border border-emerald-200/80 bg-emerald-50/85 text-emerald-800"
-      : value >= 50
-        ? "border border-sky-200/80 bg-sky-50/85 text-sky-800"
-        : value >= 25
-          ? "border border-fuchsia-200/70 bg-fuchsia-50/80 text-fuchsia-800"
-          : "border border-rose-200/80 bg-rose-50/85 text-rose-800";
-  return (
-    <div
-      className={`inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-bold shadow-sm ${tone}`}
-    >
-      <span>{label}</span>
-      <span className="tabular-nums">{value}</span>
-    </div>
-  );
-}
-
 function PrimaryButton({
   children,
   onClick,
@@ -65,6 +46,8 @@ export function StoryClient({ scenario }: { scenario: Scenario }) {
   const [showHistory, setShowHistory] = useState(false);
   const [transcript, setTranscript] = useState<Array<{ speaker: string; text: string }>>([]);
   const [visibleChars, setVisibleChars] = useState(0);
+  const [isMobileDevice, setIsMobileDevice] = useState(false);
+  const [isLandscape, setIsLandscape] = useState(true);
 
   const node = scenario.nodes[state.nodeId];
   const activeEvent = useMemo(() => {
@@ -117,6 +100,19 @@ export function StoryClient({ scenario }: { scenario: Scenario }) {
   }, [currentText, isTyping, visibleChars]);
 
   useEffect(() => {
+    if (typeof window === "undefined") return;
+    const check = () => {
+      const mobileMq = window.matchMedia("(max-width: 768px), (pointer: coarse)");
+      const landscapeMq = window.matchMedia("(orientation: landscape)");
+      setIsMobileDevice(mobileMq.matches);
+      setIsLandscape(landscapeMq.matches);
+    };
+    check();
+    window.addEventListener("resize", check);
+    return () => window.removeEventListener("resize", check);
+  }, []);
+
+  useEffect(() => {
     // When we enter a new node/event, append its first line to transcript for history.
     if (!currentLines.length) return;
     const first = currentLines[0]!;
@@ -124,16 +120,6 @@ export function StoryClient({ scenario }: { scenario: Scenario }) {
     setTranscript((prev) => [...prev, { speaker, text: first.text }]);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state.activeEventId, state.mode, state.nodeId]);
-
-  const statPills = useMemo(
-    () =>
-      scenario.stats.map((d) => ({
-        id: d.id,
-        label: d.shortLabel ?? d.label,
-        value: state.stats[d.id] ?? 0,
-      })),
-    [scenario.stats, state.stats],
-  );
 
   const availableChoices = useMemo(() => {
     if (!node || state.mode !== "node") return [];
@@ -242,8 +228,16 @@ export function StoryClient({ scenario }: { scenario: Scenario }) {
     choiceLabel: string,
     nextId: string,
     effect: Parameters<typeof applyEffect>[2] | undefined,
+    resultLine?: DialogueLine,
   ) {
-    setTranscript((prev) => [...prev, { speaker: "", text: `▶ Bạn chọn: ${choiceLabel}` }]);
+    setTranscript((prev) => {
+      const next = [...prev, { speaker: "", text: `▶ Bạn chọn: ${choiceLabel}` }];
+      if (resultLine) {
+        const speaker = resultLine.speakerId ? displayNameById[resultLine.speakerId] ?? "" : "";
+        next.push({ speaker, text: resultLine.text });
+      }
+      return next;
+    });
     goTo(nextId, effect, state.mode === "node" ? state.nodeId : undefined);
   }
 
@@ -254,6 +248,12 @@ export function StoryClient({ scenario }: { scenario: Scenario }) {
       const picked = qe?.choices.find((c) => c.id === choiceId);
       if (!qe || !picked) return prev;
       if (picked.requires && !evalPredicate(prev, picked.requires)) return prev;
+      if (picked.resultLine) {
+        const speaker = picked.resultLine.speakerId
+          ? displayNameById[picked.resultLine.speakerId] ?? ""
+          : "";
+        setTranscript((t) => [...t, { speaker, text: picked.resultLine!.text }]);
+      }
 
       let next = applyEffect(scenario, prev, picked.effect);
       next = applyAutoUnlockRoutes(scenario, next);
@@ -320,6 +320,8 @@ export function StoryClient({ scenario }: { scenario: Scenario }) {
     setLineIndex(0);
   }
 
+  const showRotateHint = isMobileDevice && !isLandscape;
+
   return (
     <div className="relative flex min-h-[100svh] flex-col text-[var(--foreground)]">
       <div className="pointer-events-none absolute inset-0 overflow-hidden">
@@ -327,19 +329,24 @@ export function StoryClient({ scenario }: { scenario: Scenario }) {
         <div className="absolute -bottom-28 left-1/3 h-[430px] w-[430px] -translate-x-1/2 rounded-full bg-fuchsia-300/20 blur-3xl" />
       </div>
 
-      {/* Top HUD */}
-      <div className="relative mx-auto w-full max-w-6xl px-4 pt-4 sm:px-6">
-        <div className="vn-glass flex flex-wrap items-center justify-center gap-3 rounded-2xl p-4 sm:gap-4 sm:p-5">
-          <div className="flex flex-wrap gap-2">
-            {statPills.map((p) => (
-              <StatPill key={p.id} label={p.label} value={p.value} />
-            ))}
+      {showRotateHint ? (
+        <div className="relative z-20 mx-auto flex w-full max-w-md flex-1 items-center justify-center px-6 text-center">
+          <div className="vn-glass rounded-3xl p-6">
+            <div className="vn-title text-xl font-extrabold text-fuchsia-900">Xoay ngang điện thoại</div>
+            <p className="mt-2 text-sm leading-6 text-[var(--text-soft)]">
+              Trò chơi được tối ưu cho màn hình ngang tỉ lệ 16:9 trên thiết bị di động.
+            </p>
           </div>
         </div>
-      </div>
+      ) : null}
 
       {/* Stage (background/characters later) */}
-      <div className="relative mx-auto flex w-full max-w-6xl flex-1 items-center justify-center px-4 py-6 sm:px-6">
+      <div
+        className={[
+          "relative mx-auto flex w-full max-w-6xl flex-1 items-center justify-center px-3 sm:px-6",
+          isMobileDevice ? "py-3" : "py-6",
+        ].join(" ")}
+      >
         <div className="h-full w-full rounded-3xl border border-pink-200/60 bg-gradient-to-b from-white/75 to-pink-50/75 shadow-[0_10px_24px_rgba(217,70,161,0.16)]" />
 
         {atEndOfLines && !isTyping ? (
@@ -361,7 +368,9 @@ export function StoryClient({ scenario }: { scenario: Scenario }) {
                 : availableChoices.map(({ choice, enabled }) => (
                     <PrimaryButton
                       key={choice.id}
-                      onClick={() => onPickChoice(choice.label, choice.next, choice.effect)}
+                      onClick={() =>
+                        onPickChoice(choice.label, choice.next, choice.effect, choice.resultLine)
+                      }
                       disabled={!enabled}
                     >
                       {choice.label}
@@ -379,11 +388,19 @@ export function StoryClient({ scenario }: { scenario: Scenario }) {
       </div>
 
       {/* Dialogue + Controls */}
-      <div className="relative mx-auto w-full max-w-6xl px-4 pb-6 sm:px-6">
+      <div
+        className={[
+          "relative mx-auto w-full max-w-6xl px-3 sm:px-6",
+          isMobileDevice ? "pb-3" : "pb-6",
+        ].join(" ")}
+      >
         <button
           type="button"
           onClick={onDialogueClick}
-          className="relative h-[194px] w-full rounded-2xl border-2 border-white/85 bg-gradient-to-b from-pink-200/88 via-pink-300/74 to-pink-400/66 p-4 text-left shadow-[0_16px_34px_rgba(236,72,153,0.24)] focus:outline-none focus-visible:ring-2 focus-visible:ring-pink-200/90 sm:h-[212px] sm:p-5 lg:h-[226px]"
+          className={[
+            "relative w-full rounded-2xl border-2 border-white/85 bg-gradient-to-b from-pink-200/88 via-pink-300/74 to-pink-400/66 text-left shadow-[0_16px_34px_rgba(236,72,153,0.24)] focus:outline-none focus-visible:ring-2 focus-visible:ring-pink-200/90",
+            isMobileDevice ? "h-[31svh] p-3" : "h-[194px] p-4 sm:h-[212px] sm:p-5 lg:h-[226px]",
+          ].join(" ")}
         >
           {currentLine?.speakerId ? (
             <div className="absolute -top-9 left-6 inline-flex min-w-[138px] justify-center rounded-md border-2 border-white bg-gradient-to-b from-white via-pink-50 to-pink-200 px-4 py-1 text-sm font-extrabold tracking-wide text-[#7a2758] shadow-[0_8px_18px_rgba(236,72,153,0.22)] sm:-top-10 sm:left-8 sm:text-base">
@@ -391,8 +408,8 @@ export function StoryClient({ scenario }: { scenario: Scenario }) {
             </div>
           ) : null}
 
-          <div className="flex h-full flex-col rounded-xl border border-white/80 bg-[radial-gradient(circle_at_9px_9px,rgba(236,72,153,0.15)_1.3px,transparent_1.3px)] [background-size:18px_18px] bg-white/38 px-6 py-4 sm:px-7 sm:py-5">
-            <div className="min-h-0 flex-1 overflow-y-auto whitespace-pre-wrap text-[1.12rem] leading-8 sm:text-[1.24rem] sm:leading-9 ddlc-outline-text">
+          <div className="flex h-full flex-col rounded-xl border border-white/80 bg-[radial-gradient(circle_at_9px_9px,rgba(236,72,153,0.15)_1.3px,transparent_1.3px)] [background-size:18px_18px] bg-white/38 px-4 py-3 sm:px-7 sm:py-5">
+            <div className="min-h-0 flex-1 overflow-y-auto whitespace-pre-wrap text-[1rem] leading-7 sm:text-[1.24rem] sm:leading-9 ddlc-outline-text">
               {displayedText}
             </div>
             {!atEndOfLines && !isTyping ? (
