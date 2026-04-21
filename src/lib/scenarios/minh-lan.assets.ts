@@ -3,11 +3,17 @@ import type { ScenarioAssets } from "@/lib/story-format";
 // Placeholder assets. Later you can point these to files in `public/`.
 export const MINH_LAN_ASSETS: ScenarioAssets = {
   backgrounds: {
-    // e.g. cafe: "/stories/minh-lan/bg/cafe.jpg"
+    coffee: "/story/minh-lan/coffeeshop.jpg",
+    schoolGate: "/story/minh-lan/truonghoc1.png",
+    classroom: "/story/minh-lan/truonghoc2.png",
+    kitchen: "/story/minh-lan/kitchen.jpg",
+    bedroomNight: "/story/minh-lan/Bedroom_Night_Dark.png",
+    restaurantB: "/story/minh-lan/Restaurant_B.png",
   },
   characters: {
-    // e.g. minh: "/stories/minh-lan/char/minh.png"
-    // lan: "/stories/minh-lan/char/lan.png"
+    lan: "/story/minh-lan/Lan1.png",
+    tuan: "/story/minh-lan/Tuan.jpg",
+    huy: "/story/minh-lan/Huy.jpg",
   },
 };
 

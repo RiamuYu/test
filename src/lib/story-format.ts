@@ -78,6 +78,7 @@ export type Node = {
   title: string;
   body: string[]; // legacy narration paragraphs (optional when using lines)
   lines?: DialogueLine[];
+  backgroundId?: string; // key of assets.backgrounds
   choices: Choice[];
 };
 
@@ -86,6 +87,7 @@ export type QuickEvent = {
   title: string;
   body: string[]; // legacy narration paragraphs
   lines?: DialogueLine[];
+  backgroundId?: string; // key of assets.backgrounds
   when: Predicate;
   once?: boolean; // default true
   forced?: boolean;

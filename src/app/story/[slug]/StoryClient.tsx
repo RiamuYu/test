@@ -27,7 +27,7 @@ function PrimaryButton({
       onClick={onClick}
       disabled={disabled}
       className={[
-        "w-full rounded-2xl px-5 py-4 text-left text-base font-semibold",
+        "w-full rounded-2xl px-3 py-2.5 text-left text-sm font-semibold sm:px-5 sm:py-4 sm:text-base",
         "border border-pink-200/70 bg-gradient-to-b from-pink-50/95 to-pink-100/90 text-fuchsia-900 shadow-[0_6px_18px_rgba(244,114,182,0.28)] transition-all",
         disabled
           ? "opacity-55 grayscale-[0.1]"
@@ -55,6 +55,22 @@ export function StoryClient({ scenario }: { scenario: Scenario }) {
     return scenario.quickEvents?.find((e) => e.id === state.activeEventId) ?? null;
   }, [scenario.quickEvents, state.activeEventId, state.mode]);
 
+  const currentBackgroundUrl = useMemo(() => {
+    const backgrounds = scenario.assets?.backgrounds;
+    if (!backgrounds) return null;
+    if (state.mode === "event" && activeEvent?.backgroundId) {
+      return backgrounds[activeEvent.backgroundId] ?? null;
+    }
+    if (node?.backgroundId) {
+      return backgrounds[node.backgroundId] ?? null;
+    }
+    if (state.mode === "event" && state.resumeTo) {
+      const resumeNode = scenario.nodes[state.resumeTo];
+      if (resumeNode?.backgroundId) return backgrounds[resumeNode.backgroundId] ?? null;
+    }
+    return null;
+  }, [activeEvent?.backgroundId, node?.backgroundId, scenario.assets?.backgrounds, scenario.nodes, state.mode, state.resumeTo]);
+
   const characterNameById = useMemo(() => {
     const map: Record<string, string> = {};
     for (const c of scenario.characters) map[c.id] = c.name;
@@ -81,6 +97,20 @@ export function StoryClient({ scenario }: { scenario: Scenario }) {
   const currentText = currentLine?.text ?? "";
   const isTyping = visibleChars < currentText.length;
   const displayedText = currentText.slice(0, visibleChars);
+  const portraitByCharacterId = scenario.assets?.characters ?? {};
+  const speakingCharacterIds = useMemo(() => {
+    const ids: string[] = [];
+    for (const line of currentLines) {
+      if (!line.speakerId) continue;
+      if (!portraitByCharacterId[line.speakerId]) continue;
+      if (!ids.includes(line.speakerId)) ids.push(line.speakerId);
+    }
+    return ids;
+  }, [currentLines, portraitByCharacterId]);
+  const shownPortraitIds = useMemo(() => {
+    if (speakingCharacterIds.length >= 2) return speakingCharacterIds.slice(0, 2);
+    return speakingCharacterIds.slice(0, 1);
+  }, [speakingCharacterIds]);
 
   useEffect(() => {
     setLineIndex(0);
@@ -323,7 +353,12 @@ export function StoryClient({ scenario }: { scenario: Scenario }) {
   const showRotateHint = isMobileDevice && !isLandscape;
 
   return (
-    <div className="relative flex min-h-[100svh] flex-col text-[var(--foreground)]">
+    <div
+      className={[
+        "relative flex min-h-[100svh] flex-col text-[var(--foreground)]",
+        isMobileDevice && isLandscape ? "h-[100svh] overflow-hidden" : "",
+      ].join(" ")}
+    >
       <div className="pointer-events-none absolute inset-0 overflow-hidden">
         <div className="absolute -top-32 left-1/2 h-[450px] w-[450px] -translate-x-1/2 rounded-full bg-pink-300/25 blur-3xl" />
         <div className="absolute -bottom-28 left-1/3 h-[430px] w-[430px] -translate-x-1/2 rounded-full bg-fuchsia-300/20 blur-3xl" />
@@ -340,18 +375,29 @@ export function StoryClient({ scenario }: { scenario: Scenario }) {
         </div>
       ) : null}
 
-      {/* Stage (background/characters later) */}
+      {/* Full-screen background */}
+      <div className="pointer-events-none absolute inset-0">
+        {currentBackgroundUrl ? (
+          <>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src={currentBackgroundUrl} alt="" className="h-full w-full object-cover" />
+            <div className="absolute inset-0 bg-black/15" />
+          </>
+        ) : (
+          <div className="h-full w-full bg-gradient-to-b from-white/75 to-pink-50/75" />
+        )}
+      </div>
+
+      {/* Overlay stage for event choices */}
       <div
         className={[
-          "relative mx-auto flex w-full max-w-6xl flex-1 items-center justify-center px-3 sm:px-6",
-          isMobileDevice ? "py-3" : "py-6",
+          "relative z-10 mx-auto flex w-full flex-1 items-center justify-center px-3 sm:px-6",
+          isMobileDevice ? "py-2" : "py-6",
         ].join(" ")}
       >
-        <div className="h-full w-full rounded-3xl border border-pink-200/60 bg-gradient-to-b from-white/75 to-pink-50/75 shadow-[0_10px_24px_rgba(217,70,161,0.16)]" />
-
         {atEndOfLines && !isTyping ? (
           <div className="pointer-events-none absolute inset-0 flex items-center justify-center px-6">
-            <div className="pointer-events-auto w-full max-w-2xl space-y-3">
+            <div className="pointer-events-auto w-full max-w-2xl space-y-2">
               {state.mode === "event" && activeEvent
                 ? availableEventChoices.map(({ choice, enabled }) => (
                     <PrimaryButton
@@ -391,15 +437,64 @@ export function StoryClient({ scenario }: { scenario: Scenario }) {
       <div
         className={[
           "relative mx-auto w-full max-w-6xl px-3 sm:px-6",
-          isMobileDevice ? "pb-3" : "pb-6",
+          isMobileDevice ? "pb-2" : "pb-6",
         ].join(" ")}
       >
+        {shownPortraitIds.length > 0 ? (
+          <div
+            className={[
+              "pointer-events-none absolute right-2 z-20 sm:right-6",
+              isMobileDevice ? "bottom-[calc(100%+4px)]" : "bottom-[calc(100%+8px)]",
+            ].join(" ")}
+            aria-hidden="true"
+          >
+            <div className={["relative", isMobileDevice ? "h-[32svh] w-[210px]" : "h-[38vh] w-[360px]"].join(" ")}>
+              {shownPortraitIds.map((characterId, index) => {
+                const portraitUrl = portraitByCharacterId[characterId];
+                if (!portraitUrl) return null;
+                const isSpeaking = currentLine?.speakerId === characterId;
+                const heightAdjustClass =
+                  characterId === "tuan"
+                    ? isMobileDevice
+                      ? "h-[28svh] max-h-[184px]"
+                      : "h-[33vh] max-h-[295px]"
+                    : isMobileDevice
+                      ? "h-[32svh] max-h-[210px]"
+                      : "h-[38vh] max-h-[340px]";
+                const positionClass =
+                  shownPortraitIds.length === 1
+                    ? "right-0 z-30"
+                    : index === 0
+                      ? "right-0 z-30"
+                      : "right-[86px] z-20";
+                return (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img
+                    key={characterId}
+                    src={portraitUrl}
+                    alt=""
+                    className={[
+                      "absolute bottom-0 select-none object-contain transition-all duration-300",
+                      heightAdjustClass,
+                      positionClass,
+                      isSpeaking
+                        ? "opacity-100 saturate-110 brightness-105 drop-shadow-[0_10px_22px_rgba(255,255,255,0.35)]"
+                        : "opacity-72 saturate-75 brightness-50",
+                    ].join(" ")}
+                    draggable={false}
+                  />
+                );
+              })}
+            </div>
+          </div>
+        ) : null}
+
         <button
           type="button"
           onClick={onDialogueClick}
           className={[
             "relative w-full rounded-2xl border-2 border-white/85 bg-gradient-to-b from-pink-200/88 via-pink-300/74 to-pink-400/66 text-left shadow-[0_16px_34px_rgba(236,72,153,0.24)] focus:outline-none focus-visible:ring-2 focus-visible:ring-pink-200/90",
-            isMobileDevice ? "h-[31svh] p-3" : "h-[194px] p-4 sm:h-[212px] sm:p-5 lg:h-[226px]",
+            isMobileDevice ? "h-[24svh] p-2.5" : "h-[194px] p-4 sm:h-[212px] sm:p-5 lg:h-[226px]",
           ].join(" ")}
         >
           {currentLine?.speakerId ? (
@@ -409,7 +504,7 @@ export function StoryClient({ scenario }: { scenario: Scenario }) {
           ) : null}
 
           <div className="flex h-full flex-col rounded-xl border border-white/80 bg-[radial-gradient(circle_at_9px_9px,rgba(236,72,153,0.15)_1.3px,transparent_1.3px)] [background-size:18px_18px] bg-white/38 px-4 py-3 sm:px-7 sm:py-5">
-            <div className="min-h-0 flex-1 overflow-y-auto whitespace-pre-wrap text-[1rem] leading-7 sm:text-[1.24rem] sm:leading-9 ddlc-outline-text">
+            <div className="min-h-0 flex-1 overflow-y-auto whitespace-pre-wrap text-[0.93rem] leading-6 sm:text-[1.24rem] sm:leading-9 ddlc-outline-text">
               {displayedText}
             </div>
             {!atEndOfLines && !isTyping ? (
@@ -420,25 +515,25 @@ export function StoryClient({ scenario }: { scenario: Scenario }) {
           </div>
         </button>
 
-        <div className="mt-2 flex flex-col gap-2 rounded-xl border border-pink-200/90 bg-white/72 px-3 py-2 shadow-[0_6px_16px_rgba(217,70,161,0.16)] sm:flex-row sm:items-center sm:justify-between">
+        <div className="mt-1.5 flex flex-col gap-1.5 rounded-xl border border-pink-200/90 bg-white/72 px-2.5 py-1.5 shadow-[0_6px_16px_rgba(217,70,161,0.16)] sm:mt-2 sm:gap-2 sm:px-3 sm:py-2 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex flex-wrap gap-2">
             <Link
               href="/"
-              className="inline-flex items-center gap-2 rounded-md border border-pink-200/80 bg-gradient-to-b from-pink-50/95 to-pink-100/90 px-4 py-2 text-sm font-bold text-fuchsia-900 hover:from-pink-50 hover:to-pink-200/95"
+              className="inline-flex items-center gap-1.5 rounded-md border border-pink-200/80 bg-gradient-to-b from-pink-50/95 to-pink-100/90 px-3 py-1.5 text-xs font-bold text-fuchsia-900 hover:from-pink-50 hover:to-pink-200/95 sm:gap-2 sm:px-4 sm:py-2 sm:text-sm"
             >
               ⌂ Menu
             </Link>
             <button
               type="button"
               onClick={back}
-              className="inline-flex items-center gap-2 rounded-md border border-pink-200/80 bg-gradient-to-b from-pink-50/95 to-pink-100/90 px-4 py-2 text-sm font-bold text-fuchsia-900 hover:from-pink-50 hover:to-pink-200/95"
+              className="inline-flex items-center gap-1.5 rounded-md border border-pink-200/80 bg-gradient-to-b from-pink-50/95 to-pink-100/90 px-3 py-1.5 text-xs font-bold text-fuchsia-900 hover:from-pink-50 hover:to-pink-200/95 sm:gap-2 sm:px-4 sm:py-2 sm:text-sm"
             >
               ↶ Back
             </button>
             <button
               type="button"
               onClick={() => setShowHistory(true)}
-              className="inline-flex items-center gap-2 rounded-md border border-pink-200/80 bg-gradient-to-b from-pink-50/95 to-pink-100/90 px-4 py-2 text-sm font-bold text-fuchsia-900 hover:from-pink-50 hover:to-pink-200/95"
+              className="inline-flex items-center gap-1.5 rounded-md border border-pink-200/80 bg-gradient-to-b from-pink-50/95 to-pink-100/90 px-3 py-1.5 text-xs font-bold text-fuchsia-900 hover:from-pink-50 hover:to-pink-200/95 sm:gap-2 sm:px-4 sm:py-2 sm:text-sm"
             >
               ☰ History
             </button>
@@ -447,7 +542,7 @@ export function StoryClient({ scenario }: { scenario: Scenario }) {
           <button
             type="button"
             onClick={reset}
-            className="inline-flex items-center gap-2 rounded-md border border-pink-200/80 bg-gradient-to-b from-pink-50/95 to-pink-100/90 px-4 py-2 text-sm font-bold text-fuchsia-900 hover:from-pink-50 hover:to-pink-200/95"
+            className="inline-flex items-center gap-1.5 rounded-md border border-pink-200/80 bg-gradient-to-b from-pink-50/95 to-pink-100/90 px-3 py-1.5 text-xs font-bold text-fuchsia-900 hover:from-pink-50 hover:to-pink-200/95 sm:gap-2 sm:px-4 sm:py-2 sm:text-sm"
           >
             ↻ Restart
           </button>

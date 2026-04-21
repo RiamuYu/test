@@ -54,26 +54,43 @@ export const MINH_LAN_SCENARIO: Scenario = {
     },
   ],
 
-  startNodeId: "scene0",
+  startNodeId: "scene0_home",
   nodes: {
-    scene0: {
-      id: "scene0",
+    scene0_home: {
+      id: "scene0_home",
       kind: "scene",
-      title: "PROLOGUE – NHỮNG NGÀY BÌNH THƯỜNG",
+      backgroundId: "kitchen",
+      title: "PROLOGUE – Ở NHÀ",
       body: [
         "Những ngày cuối học kỳ luôn có một nhịp riêng: sáng đến lớp, chiều học thêm, tối vùi trong bài tập.",
-        "Minh (lớp 11) không phải học sinh tệ, nhưng Minh hay tự gây áp lực. Minh sợ cảm giác ‘tụt lại’, sợ bị gắn mác lười, sợ làm bố mẹ thất vọng.",
-        "Tuân và Huy là hai người Minh vẫn nói chuyện nhiều nhất ở lớp. Một người thẳng tính, một người ít lời nhưng tinh.",
         "Ở nhà, mẹ Minh để ý từng thay đổi nhỏ, còn bố Minh không nói nhiều nhưng luôn quan sát.",
-        "Minh nghĩ mình hiểu thế giới của mình khá rõ… cho tới khi một người lạ bước vào và làm nhịp mọi thứ đổi khác.",
+        "Minh cố tỏ ra bình thường, nhưng áp lực học hành đã bắt đầu bám theo vào cả bữa ăn gia đình.",
       ],
       lines: [
         { text: "Những ngày cuối học kỳ luôn có một nhịp riêng: sáng đến lớp, chiều học thêm, tối vùi trong bài tập." },
-        { speakerId: "tuan", text: "Mày ôn tới đâu rồi? Mấy bữa nữa kiểm tra đó." },
-        { speakerId: "minh", text: "Tao đang cố… mà càng gần ngày càng căng." },
-        { speakerId: "huy", text: "Căng thì càng phải ngủ đủ. Đừng thức khuya vô nghĩa." },
         { speakerId: "me", text: "Con ăn sáng cho đàng hoàng. Đừng vừa đi vừa nhai bánh mì." },
         { speakerId: "bo", text: "Thi cử quan trọng, nhưng sức khỏe cũng quan trọng." },
+        { speakerId: "minh", text: "(Mình không muốn bố mẹ lo… nhưng dạo này lúc nào cũng thấy căng.)" },
+        { text: "Minh khoác balo, rời nhà. Buổi sáng ở trường vẫn đang chờ phía trước." },
+      ],
+      choices: [{ id: "s0h_next", label: "Đến trường", next: "scene0" }],
+    },
+
+    scene0: {
+      id: "scene0",
+      kind: "scene",
+      backgroundId: "schoolGate",
+      title: "PROLOGUE – NHỮNG NGÀY BÌNH THƯỜNG",
+      body: [
+        "Minh (lớp 11) không phải học sinh tệ, nhưng Minh hay tự gây áp lực. Minh sợ cảm giác ‘tụt lại’, sợ bị gắn mác lười, sợ làm bố mẹ thất vọng.",
+        "Tuân và Huy là hai người Minh vẫn nói chuyện nhiều nhất ở lớp. Một người thẳng tính, một người ít lời nhưng tinh.",
+        "Minh nghĩ mình hiểu thế giới của mình khá rõ… cho tới khi một người lạ bước vào và làm nhịp mọi thứ đổi khác.",
+      ],
+      lines: [
+        { text: "Ở cổng trường, tiếng xe cộ và tiếng gọi nhau khiến buổi sáng luôn rộn ràng." },
+        { speakerId: "tuan", text: "Mày ôn tới đâu rồi? Mấy bữa nữa kiểm tra đó." },
+        { speakerId: "minh", text: "Tao đang cố… mà càng gần ngày càng căng." },
+        { speakerId: "huy", text: "Căng thì càng phải ngủ đủ. Đừng thức khuya chơi game nữa." },
         { speakerId: "minh", text: "(Mình cứ nghĩ cuộc sống sẽ lặp y như vậy…)" },
         { text: "Chiều đó, Minh ghé quán cà phê gần trường để học. Và lần đầu tiên, Minh gặp một ‘người lạ’." },
       ],
@@ -83,6 +100,7 @@ export const MINH_LAN_SCENARIO: Scenario = {
     scene1: {
       id: "scene1",
       kind: "scene",
+      backgroundId: "coffee",
       title: "SCENE 1 – QUÁN CÀ PHÊ",
       body: [
         "Chiều muộn, quán cà phê gần trường hơi ồn: tiếng muỗng chạm ly, tiếng máy xay, vài nhóm bạn cười khúc khích.",
@@ -141,6 +159,7 @@ export const MINH_LAN_SCENARIO: Scenario = {
     scene1a: {
       id: "scene1a",
       kind: "scene",
+      backgroundId: "coffee",
       title: "SCENE 1A – TRAO ĐỔI LIÊN LẠC",
       body: [
         "Cuộc nói chuyện kéo dài hơn Minh tưởng. Người lạ hỏi han vừa đủ, không tra khảo, nhưng đủ để Minh thấy ‘được chú ý’.",
@@ -161,6 +180,7 @@ export const MINH_LAN_SCENARIO: Scenario = {
     scene2r: {
       id: "scene2r",
       kind: "scene",
+      backgroundId: "bedroomNight",
       title: "SCENE 2 – INSTAGRAM (LỘ TÊN)",
       body: [
         "Tối đó, Minh mở Instagram. Trong danh sách follow mới, Minh thấy tài khoản vừa gửi yêu cầu.",
@@ -180,6 +200,7 @@ export const MINH_LAN_SCENARIO: Scenario = {
     scene2: {
       id: "scene2",
       kind: "scene",
+      backgroundId: "classroom",
       title: "SCENE 2 – INSTAGRAM",
       body: [
         "Minh lướt Instagram như thói quen. Chưa kịp nghĩ nhiều, Lan đã rep story của Minh bằng một câu ngắn gọn nhưng đủ làm tim đập nhanh:",
@@ -224,16 +245,17 @@ export const MINH_LAN_SCENARIO: Scenario = {
     scene3: {
       id: "scene3",
       kind: "scene",
+      backgroundId: "classroom",
       title: "SCENE 3 – TIN NHẮN 0H",
       body: [
-        "0 giờ. Minh đang nằm lướt điện thoại, mắt đã mỏi nhưng vẫn chưa ngủ được.",
+        "Nửa đêm. Minh đang nằm lướt điện thoại, mắt đã mỏi nhưng vẫn chưa ngủ được.",
         "Tin nhắn từ Lan bật lên như một tiếng gõ cửa vào sự riêng tư của buổi đêm:",
         "“Chưa ngủ à? Nói chuyện chút không?”",
         "Minh cảm thấy vừa được chú ý, vừa bị kéo khỏi nhịp sinh hoạt của mình.",
         "Một câu trả lời có thể biến việc này thành ‘thói quen’ — và thói quen thì rất khó thay đổi về sau.",
       ],
       lines: [
-        { text: "0 giờ. Minh nằm lướt điện thoại, mắt đã mỏi nhưng vẫn chưa ngủ được." },
+        { text: "Nửa đêm. Minh nằm lướt điện thoại, mắt đã mỏi nhưng vẫn chưa ngủ được." },
         { text: "Tin nhắn từ Lan bật lên như một tiếng gõ cửa vào sự riêng tư của buổi đêm." },
         { speakerId: "lan", text: "Chưa ngủ à? Nói chuyện chút không?" },
         { speakerId: "minh", text: "(Nếu mình trả lời ngay… liệu sau này đêm nào cũng vậy không?)" },
@@ -261,6 +283,7 @@ export const MINH_LAN_SCENARIO: Scenario = {
     scene3a: {
       id: "scene3a",
       kind: "scene",
+      backgroundId: "classroom",
       title: "SCENE 3A – BUỔI SÁNG Ở TRƯỜNG",
       body: [
         "Sáng hôm sau, Minh đến lớp với đôi mắt hơi mỏi. Đầu óc như vẫn còn mắc kẹt ở cuộc trò chuyện đêm qua.",
@@ -272,7 +295,7 @@ export const MINH_LAN_SCENARIO: Scenario = {
         { text: "Sáng hôm sau, Minh đến lớp với đôi mắt hơi mỏi." },
         { speakerId: "tuan", text: "Đêm qua lại thức khuya hả? Mặt mày như mất ngủ mấy ngày rồi." },
         { speakerId: "minh", text: "Không… tao vẫn ổn." },
-        { speakerId: "huy", text: "Ổn thì tốt. Nhưng nếu có gì, đừng tự ôm." },
+        { speakerId: "huy", text: "Ổn thì tốt. Nhưng nếu có gì, thì nói cho bọn tao nhé." },
         { speakerId: "minh", text: "(Mình sợ nhất không phải bị mọi người biết… mà là bị người kia giận.)" },
         { text: "Chuông vào tiết vang lên. Minh cất điện thoại, nhưng tay vẫn vô thức chạm vào túi áo." },
       ],
@@ -282,6 +305,7 @@ export const MINH_LAN_SCENARIO: Scenario = {
     scene4: {
       id: "scene4",
       kind: "scene",
+      backgroundId: "schoolGate",
       title: "SCENE 4 – LẦN HẸN ĐẦU",
       body: [
         "Vài ngày sau, Lan nhắn: “Đi uống nước tối nay nhé?”",
@@ -306,18 +330,64 @@ export const MINH_LAN_SCENARIO: Scenario = {
         {
           id: "s4_b",
           label: "Đổi sang quán đông, ban ngày",
-          next: "scene5",
+          next: "scene5safe",
           effect: { stats: { S: 15, A: 5 }, flags: { green: 1 } },
           note: "🟢",
+          resultLine: { speakerId: "minh", text: "Mình chọn chỗ đông người và ban ngày cho an toàn hơn." },
         },
         { id: "s4_c", label: "Từ chối", next: "scene5", effect: { stats: { S: 10, T: -5 } } },
         {
           id: "s4_d",
           label: "Hỏi rõ lý do",
-          next: "scene5",
+          next: "scene5safe",
           effect: { stats: { A: 10 } },
           requires: { stat: { key: "A", op: ">=", value: 35 } },
           note: "🔒",
+          resultLine: {
+            speakerId: "minh",
+            text: "Nếu đi gặp, mình cần biết rõ kế hoạch để tự bảo vệ bản thân.",
+          },
+        },
+      ],
+    },
+
+    scene5safe: {
+      id: "scene5safe",
+      kind: "scene",
+      backgroundId: "restaurantB",
+      title: "SCENE 5 – QUÁN ĐÔNG (GIỮ NHỊP AN TOÀN)",
+      body: [
+        "Cuộc hẹn diễn ra ở một quán đông người, sáng sủa và nhiều bàn xung quanh.",
+        "Không khí bớt ngột ngạt hơn, Minh thấy mình giữ được nhịp nói chuyện tốt hơn thay vì bị cuốn theo.",
+        "Lan vẫn thử đẩy câu chuyện theo hướng thân mật, nhưng Minh bắt đầu chủ động đặt giới hạn rõ ràng hơn.",
+      ],
+      lines: [
+        { text: "Buổi gặp diễn ra ở quán đông, ban ngày. Minh thấy mình bớt áp lực hơn." },
+        { speakerId: "lan", text: "Em cẩn thận ghê, chọn chỗ đông người luôn." },
+        { speakerId: "minh", text: "Em muốn cả hai thoải mái và tôn trọng ranh giới của nhau." },
+        { speakerId: "lan", text: "Ừ… chị hiểu. Miễn em đừng xa cách quá là được." },
+        { speakerId: "minh", text: "(Mình vẫn có cảm xúc, nhưng lần này mình không muốn bỏ quên sự an toàn.)" },
+      ],
+      choices: [
+        {
+          id: "s5safe_a",
+          label: "Đáp lại vừa phải",
+          next: "scene6",
+          effect: { stats: { E: 8, S: 8 }, flags: { green: 1 } },
+          note: "🟢",
+        },
+        {
+          id: "s5safe_b",
+          label: "Nhắc lại ranh giới",
+          next: "scene6",
+          effect: { stats: { A: 12, S: 10 }, flags: { green: 1 } },
+          note: "🟢",
+        },
+        {
+          id: "s5safe_c",
+          label: "Im lặng cho qua",
+          next: "scene6",
+          effect: { stats: { T: 5 } },
         },
       ],
     },
@@ -325,6 +395,7 @@ export const MINH_LAN_SCENARIO: Scenario = {
     scene5: {
       id: "scene5",
       kind: "scene",
+      backgroundId: "coffee",
       title: "SCENE 5 – KHÔNG KHÍ THÂN MẬT",
       body: [
         "Cuộc hẹn diễn ra trong một không gian khiến Minh vừa thấy gần gũi, vừa thấy ‘bị kéo’ theo nhịp của Lan.",
@@ -361,6 +432,7 @@ export const MINH_LAN_SCENARIO: Scenario = {
     scene6: {
       id: "scene6",
       kind: "scene",
+      backgroundId: "kitchen",
       title: "SCENE 6 – “GIỮ BÍ MẬT NHÉ”",
       body: [
         "Sau vài lần gặp, Lan bắt đầu nói về ‘điều riêng tư’ giữa hai người.",
@@ -401,6 +473,7 @@ export const MINH_LAN_SCENARIO: Scenario = {
     scene7: {
       id: "scene7",
       kind: "scene",
+      backgroundId: "classroom",
       title: "SCENE 7 – NGƯỜI THỨ 3",
       body: [
         "Ở trường, Huy kéo Minh ra một góc, nói nhỏ:",
@@ -434,6 +507,7 @@ export const MINH_LAN_SCENARIO: Scenario = {
     scene8: {
       id: "scene8",
       kind: "scene",
+      backgroundId: "classroom",
       title: "SCENE 8 – LAN GHEN",
       body: [
         "Lan bắt đầu ghen. Ban đầu chỉ là những câu hỏi tưởng như quan tâm:",
@@ -467,6 +541,7 @@ export const MINH_LAN_SCENARIO: Scenario = {
     scene9: {
       id: "scene9",
       kind: "scene",
+      backgroundId: "classroom",
       title: "SCENE 9 – HỌC TẬP",
       body: [
         "Minh bắt đầu mệt mỏi hơn. Có ngày Minh học không vào vì phải trả lời tin nhắn liên tục.",
@@ -492,6 +567,7 @@ export const MINH_LAN_SCENARIO: Scenario = {
     scene9a: {
       id: "scene9a",
       kind: "scene",
+      backgroundId: "classroom",
       title: "SCENE 9A – HỌC NHÓM",
       body: [
         "Tối đó, Minh cố đến buổi học nhóm như một ‘điểm neo’ kéo mình trở lại nhịp sống bình thường.",
@@ -513,6 +589,7 @@ export const MINH_LAN_SCENARIO: Scenario = {
     scene10: {
       id: "scene10",
       kind: "scene",
+      backgroundId: "classroom",
       title: "SCENE 10 – CHỦ ĐỀ NHẠY CẢM",
       body: [
         "Một lần gặp nhau, Lan chủ động đưa câu chuyện sang một chủ đề nhạy cảm hơn.",
@@ -558,6 +635,7 @@ export const MINH_LAN_SCENARIO: Scenario = {
     scene11: {
       id: "scene11",
       kind: "scene",
+      backgroundId: "kitchen",
       title: "SCENE 11 – RỦ ĐI XA",
       body: [
         "Lan rủ Minh đi xa. Nghe có vẻ lãng mạn, nhưng Minh chợt nghĩ tới những điều đơn giản:",
@@ -581,6 +659,7 @@ export const MINH_LAN_SCENARIO: Scenario = {
     scene12: {
       id: "scene12",
       kind: "scene",
+      backgroundId: "schoolGate",
       title: "SCENE 12 – DẤU HIỆU LẠ",
       body: [
         "Minh bắt đầu thấy những chi tiết nhỏ nhưng lặp đi lặp lại: cách Lan nói về người khác, cách Lan phản ứng khi Minh bận, cách Lan ‘định nghĩa’ tình yêu.",
@@ -604,6 +683,7 @@ export const MINH_LAN_SCENARIO: Scenario = {
     scene13: {
       id: "scene13",
       kind: "scene",
+      backgroundId: "classroom",
       title: "SCENE 13 – BỊ KIỂM SOÁT",
       body: [
         "Một tối, Lan hỏi Minh có thể cho xem điện thoại không — danh bạ, tin nhắn, thậm chí cả lịch sử chat.",
@@ -634,6 +714,7 @@ export const MINH_LAN_SCENARIO: Scenario = {
     scene14: {
       id: "scene14",
       kind: "scene",
+      backgroundId: "classroom",
       title: "SCENE 14 – ÁP LỰC “CHỨNG MINH”",
       body: [
         "Lan nói những câu khiến Minh khó thở:",
@@ -658,6 +739,7 @@ export const MINH_LAN_SCENARIO: Scenario = {
     scene15: {
       id: "scene15",
       kind: "scene",
+      backgroundId: "kitchen",
       title: "SCENE 15 – KHỦNG HOẢNG",
       body: [
         "Mọi thứ dồn lại thành một khối nặng trong ngực Minh: vừa thương, vừa mệt, vừa hoang mang.",
@@ -681,6 +763,7 @@ export const MINH_LAN_SCENARIO: Scenario = {
     scene15a: {
       id: "scene15a",
       kind: "scene",
+      backgroundId: "classroom",
       title: "SCENE 15A – NÓI CHUYỆN VỚI CÔ HÀ",
       body: [
         "Hôm sau, Minh bị gọi lên gặp cô Hà. Không phải để trách phạt — mà để hỏi xem Minh đang ‘mất’ gì trong những ngày gần đây.",
@@ -702,6 +785,7 @@ export const MINH_LAN_SCENARIO: Scenario = {
     scene16: {
       id: "scene16",
       kind: "scene",
+      backgroundId: "schoolGate",
       title: "SCENE 16 – SỰ THẬT",
       body: [
         "Sự thật cuối cùng cũng dần lộ ra — không phải trong một ‘cú sốc’ duy nhất, mà qua nhiều chi tiết chồng lên nhau.",
@@ -720,6 +804,7 @@ export const MINH_LAN_SCENARIO: Scenario = {
     scene17: {
       id: "scene17",
       kind: "scene",
+      backgroundId: "schoolGate",
       title: "SCENE 17 – QUYẾT ĐỊNH",
       body: [
         "Minh đứng trước lựa chọn cuối cùng.",
