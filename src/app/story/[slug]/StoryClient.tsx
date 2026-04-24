@@ -49,6 +49,43 @@ export function StoryClient({ scenario }: { scenario: Scenario }) {
   const [isMobileDevice, setIsMobileDevice] = useState(false);
   const [isLandscape, setIsLandscape] = useState(true);
   const [hasTriedFullscreen, setHasTriedFullscreen] = useState(false);
+  const [dismissRotateHint, setDismissRotateHint] = useState(false);
+  const [pendingChoiceResult, setPendingChoiceResult] = useState<{
+    lines: DialogueLine[];
+    next:
+      | {
+          type: "node";
+          nextId: string;
+          effect?: Parameters<typeof applyEffect>[2];
+          addHistoryFrom?: string;
+        }
+      | {
+          type: "event";
+          choiceId: string;
+        };
+  } | null>(null);
+  const [choiceCheckpoints, setChoiceCheckpoints] = useState<
+    Array<{
+      state: ReturnType<typeof createInitialState>;
+      transcript: Array<{ speaker: string; text: string }>;
+      lineIndex: number;
+      visibleChars: number;
+      pendingChoiceResult: {
+        lines: DialogueLine[];
+        next:
+          | {
+              type: "node";
+              nextId: string;
+              effect?: Parameters<typeof applyEffect>[2];
+              addHistoryFrom?: string;
+            }
+          | {
+              type: "event";
+              choiceId: string;
+            };
+      } | null;
+    }>
+  >([]);
 
   const node = scenario.nodes[state.nodeId];
   const activeEvent = useMemo(() => {
@@ -93,8 +130,9 @@ export function StoryClient({ scenario }: { scenario: Scenario }) {
     return node.lines ?? node.body.map((t) => ({ text: t }));
   }, [activeEvent, node, state.mode]);
 
-  const currentLine = currentLines[lineIndex] ?? null;
-  const atEndOfLines = lineIndex >= Math.max(0, currentLines.length - 1);
+  const renderedLines = pendingChoiceResult ? pendingChoiceResult.lines : currentLines;
+  const currentLine = renderedLines[lineIndex] ?? null;
+  const atEndOfLines = lineIndex >= Math.max(0, renderedLines.length - 1);
   const currentText = currentLine?.text ?? "";
   const isTyping = visibleChars < currentText.length;
   const displayedText = currentText.slice(0, visibleChars);
@@ -116,7 +154,7 @@ export function StoryClient({ scenario }: { scenario: Scenario }) {
 
   useEffect(() => {
     setLineIndex(0);
-  }, [state.activeEventId, state.mode, state.nodeId]);
+  }, [pendingChoiceResult, state.activeEventId, state.mode, state.nodeId]);
 
   useEffect(() => {
     setVisibleChars(0);
@@ -195,14 +233,14 @@ export function StoryClient({ scenario }: { scenario: Scenario }) {
   }, [activeEvent, state]);
 
   function pushTranscriptForLine(nextIndex: number) {
-    const ln = currentLines[nextIndex];
+    const ln = renderedLines[nextIndex];
     if (!ln) return;
     const speaker = ln.speakerId ? displayNameById[ln.speakerId] ?? "" : "";
     setTranscript((prev) => [...prev, { speaker, text: ln.text }]);
   }
 
   function advanceLine() {
-    if (lineIndex >= currentLines.length - 1) return;
+    if (lineIndex >= renderedLines.length - 1) return;
     const next = lineIndex + 1;
     setLineIndex(next);
     pushTranscriptForLine(next);
@@ -213,6 +251,23 @@ export function StoryClient({ scenario }: { scenario: Scenario }) {
     if (!currentText) return;
     if (isTyping) {
       setVisibleChars(currentText.length);
+      return;
+    }
+    if (pendingChoiceResult) {
+      if (!atEndOfLines) {
+        advanceLine();
+        return;
+      }
+      if (pendingChoiceResult.next.type === "node") {
+        goTo(
+          pendingChoiceResult.next.nextId,
+          pendingChoiceResult.next.effect,
+          pendingChoiceResult.next.addHistoryFrom,
+        );
+      } else {
+        acceptEvent(pendingChoiceResult.next.choiceId, true);
+      }
+      setPendingChoiceResult(null);
       return;
     }
     if (!atEndOfLines) {
@@ -286,31 +341,90 @@ export function StoryClient({ scenario }: { scenario: Scenario }) {
     choiceLabel: string,
     nextId: string,
     effect: Parameters<typeof applyEffect>[2] | undefined,
+    resultLines?: DialogueLine[],
     resultLine?: DialogueLine,
   ) {
+    setChoiceCheckpoints((prev) => [
+      ...prev,
+      {
+        state,
+        transcript,
+        lineIndex,
+        visibleChars,
+        pendingChoiceResult,
+      },
+    ]);
+
+    const normalizedResultLines =
+      resultLines && resultLines.length ? resultLines : resultLine ? [resultLine] : [];
+    if (normalizedResultLines.length) {
+      setTranscript((prev) => {
+        return [
+          ...prev,
+          { speaker: "", text: `▶ Bạn chọn: ${choiceLabel}` },
+          ...normalizedResultLines.map((ln) => ({
+            speaker: ln.speakerId ? displayNameById[ln.speakerId] ?? "" : "",
+            text: ln.text,
+          })),
+        ];
+      });
+      setPendingChoiceResult({
+        lines: normalizedResultLines,
+        next: {
+          type: "node",
+          nextId,
+          effect,
+          addHistoryFrom: state.mode === "node" ? state.nodeId : undefined,
+        },
+      });
+      return;
+    }
+
     setTranscript((prev) => {
-      const next = [...prev, { speaker: "", text: `▶ Bạn chọn: ${choiceLabel}` }];
-      if (resultLine) {
-        const speaker = resultLine.speakerId ? displayNameById[resultLine.speakerId] ?? "" : "";
-        next.push({ speaker, text: resultLine.text });
-      }
-      return next;
+      return [...prev, { speaker: "", text: `▶ Bạn chọn: ${choiceLabel}` }];
     });
     goTo(nextId, effect, state.mode === "node" ? state.nodeId : undefined);
   }
 
-  function acceptEvent(choiceId: string) {
+  function acceptEvent(choiceId: string, resolvePending = false) {
+    if (!resolvePending && state.mode === "event") {
+      setChoiceCheckpoints((prev) => [
+        ...prev,
+        {
+          state,
+          transcript,
+          lineIndex,
+          visibleChars,
+          pendingChoiceResult,
+        },
+      ]);
+    }
+
     setState((prev) => {
       if (prev.mode !== "event" || !prev.activeEventId || !prev.resumeTo) return prev;
       const qe = scenario.quickEvents?.find((e) => e.id === prev.activeEventId);
       const picked = qe?.choices.find((c) => c.id === choiceId);
       if (!qe || !picked) return prev;
       if (picked.requires && !evalPredicate(prev, picked.requires)) return prev;
-      if (picked.resultLine) {
-        const speaker = picked.resultLine.speakerId
-          ? displayNameById[picked.resultLine.speakerId] ?? ""
-          : "";
-        setTranscript((t) => [...t, { speaker, text: picked.resultLine!.text }]);
+      const pickedResultLines =
+        picked.resultLines && picked.resultLines.length
+          ? picked.resultLines
+          : picked.resultLine
+            ? [picked.resultLine]
+            : [];
+      if (pickedResultLines.length && !resolvePending) {
+        setTranscript((t) => [
+          ...t,
+          ...pickedResultLines.map((ln) => ({
+            speaker: ln.speakerId ? displayNameById[ln.speakerId] ?? "" : "",
+            text: ln.text,
+          })),
+        ]);
+        setPendingChoiceResult({
+          lines: pickedResultLines,
+          next: { type: "event", choiceId },
+        });
+        return prev;
       }
 
       let next = applyEffect(scenario, prev, picked.effect);
@@ -349,26 +463,47 @@ export function StoryClient({ scenario }: { scenario: Scenario }) {
   }
 
   function back() {
+    if (isTyping) {
+      setVisibleChars(currentText.length);
+      return;
+    }
+
     if (lineIndex > 0) {
       setLineIndex((i) => Math.max(0, i - 1));
+      setVisibleChars(renderedLines[Math.max(0, lineIndex - 1)]?.text.length ?? 0);
       setTranscript((prev) => prev.slice(0, Math.max(0, prev.length - 1)));
       return;
     }
 
-    setState((prev) => {
-      if (prev.mode === "event") {
-        return {
-          ...prev,
-          mode: "node",
-          activeEventId: undefined,
-          resumeTo: undefined,
-        };
-      }
-      if (prev.history.length === 0) return prev;
-      const history = prev.history.slice();
-      const prevId = history.pop()!;
-      return { ...prev, nodeId: prevId, history };
+    setChoiceCheckpoints((prev) => {
+      if (!prev.length) return prev;
+      const snapshot = prev[prev.length - 1]!;
+      setState(snapshot.state);
+      setTranscript(snapshot.transcript);
+      setLineIndex(snapshot.lineIndex);
+      setVisibleChars(snapshot.visibleChars);
+      setPendingChoiceResult(snapshot.pendingChoiceResult);
+      return prev.slice(0, -1);
     });
+  }
+
+  function skipToNextChoice() {
+    if (!currentLines.length) return;
+    if (atEndOfLines && !isTyping) return;
+
+    const endIndex = Math.max(0, currentLines.length - 1);
+    setLineIndex(endIndex);
+    setVisibleChars(currentLines[endIndex]?.text.length ?? 0);
+
+    const skipped = currentLines.slice(lineIndex + 1);
+    if (!skipped.length) return;
+    setTranscript((prev) => [
+      ...prev,
+      ...skipped.map((ln) => ({
+        speaker: ln.speakerId ? displayNameById[ln.speakerId] ?? "" : "",
+        text: ln.text,
+      })),
+    ]);
   }
 
   function reset() {
@@ -376,9 +511,12 @@ export function StoryClient({ scenario }: { scenario: Scenario }) {
     setTranscript([]);
     setShowHistory(false);
     setLineIndex(0);
+    setVisibleChars(0);
+    setPendingChoiceResult(null);
+    setChoiceCheckpoints([]);
   }
 
-  const showRotateHint = isMobileDevice && !isLandscape;
+  const showRotateHint = isMobileDevice && !isLandscape && !dismissRotateHint;
 
   return (
     <div
@@ -393,11 +531,21 @@ export function StoryClient({ scenario }: { scenario: Scenario }) {
       </div>
 
       {showRotateHint ? (
-        <div className="relative z-20 mx-auto flex w-full max-w-md flex-1 items-center justify-center px-6 text-center">
-          <div className="vn-glass rounded-3xl p-6">
-            <div className="vn-title text-xl font-extrabold text-fuchsia-900">Xoay ngang điện thoại</div>
+        <div className="relative z-20 mx-auto mt-3 w-full max-w-md px-4 text-center">
+          <div className="vn-glass relative rounded-3xl p-4 pr-12 sm:p-5">
+            <button
+              type="button"
+              onClick={() => setDismissRotateHint(true)}
+              className="absolute right-3 top-3 inline-flex h-9 w-9 items-center justify-center rounded-full border border-pink-200/80 bg-white/80 text-lg font-bold text-fuchsia-900 hover:bg-pink-50"
+              aria-label="Đóng gợi ý xoay ngang"
+            >
+              ✕
+            </button>
+            <div className="vn-title text-lg font-extrabold text-fuchsia-900 sm:text-xl">
+              Mẹo: xoay ngang để trải nghiệm đẹp hơn
+            </div>
             <p className="mt-2 text-sm leading-6 text-[var(--text-soft)]">
-              Trò chơi được tối ưu cho màn hình ngang tỉ lệ 16:9 trên thiết bị di động.
+              Bạn vẫn có thể chơi ở chế độ dọc, nhưng xoay ngang sẽ hiển thị khung thoại và nhân vật cân đối hơn.
             </p>
           </div>
         </div>
@@ -423,7 +571,7 @@ export function StoryClient({ scenario }: { scenario: Scenario }) {
           isMobileLandscape ? "py-1" : isMobileDevice ? "py-2" : "py-6",
         ].join(" ")}
       >
-        {atEndOfLines && !isTyping ? (
+        {atEndOfLines && !isTyping && !pendingChoiceResult ? (
           <div className="pointer-events-none absolute inset-0 flex items-center justify-center px-6">
             <div
               className={[
@@ -450,7 +598,13 @@ export function StoryClient({ scenario }: { scenario: Scenario }) {
                     <PrimaryButton
                       key={choice.id}
                       onClick={() =>
-                        onPickChoice(choice.label, choice.next, choice.effect, choice.resultLine)
+                        onPickChoice(
+                          choice.label,
+                          choice.next,
+                          choice.effect,
+                          choice.resultLines,
+                          choice.resultLine,
+                        )
                       }
                       disabled={!enabled}
                     >
@@ -475,6 +629,12 @@ export function StoryClient({ scenario }: { scenario: Scenario }) {
           isMobileLandscape ? "pb-1" : isMobileDevice ? "pb-2" : "pb-6",
         ].join(" ")}
       >
+        {isMobileDevice && !isLandscape ? (
+          <div className="mb-2 text-center text-xs font-medium text-white/85 drop-shadow-[0_1px_2px_rgba(0,0,0,0.5)]">
+            Gợi ý: xoay ngang để nhìn rõ hơn, hoặc tiếp tục chơi ở dọc nếu bạn thấy ổn.
+          </div>
+        ) : null}
+
         {shownPortraitIds.length > 0 ? (
           <div
             className={[
@@ -595,6 +755,19 @@ export function StoryClient({ scenario }: { scenario: Scenario }) {
               className="inline-flex items-center gap-1.5 rounded-md border border-pink-200/80 bg-gradient-to-b from-pink-50/95 to-pink-100/90 px-3 py-1.5 text-xs font-bold text-fuchsia-900 hover:from-pink-50 hover:to-pink-200/95 sm:gap-2 sm:px-4 sm:py-2 sm:text-sm"
             >
               ↶ Back
+            </button>
+            <button
+              type="button"
+              onClick={skipToNextChoice}
+              disabled={atEndOfLines && !isTyping}
+              className={[
+                "inline-flex items-center gap-1.5 rounded-md border border-pink-200/80 bg-gradient-to-b from-pink-50/95 to-pink-100/90 px-3 py-1.5 text-xs font-bold text-fuchsia-900 sm:gap-2 sm:px-4 sm:py-2 sm:text-sm",
+                atEndOfLines && !isTyping
+                  ? "cursor-not-allowed opacity-60"
+                  : "hover:from-pink-50 hover:to-pink-200/95",
+              ].join(" ")}
+            >
+              ⤼ Skip
             </button>
             <button
               type="button"

@@ -73,7 +73,14 @@ export const MINH_LAN_SCENARIO: Scenario = {
         { speakerId: "minh", text: "(Mình không muốn bố mẹ lo… nhưng dạo này lúc nào cũng thấy căng.)" },
         { text: "Minh khoác balo, rời nhà. Buổi sáng ở trường vẫn đang chờ phía trước." },
       ],
-      choices: [{ id: "s0h_next", label: "Đến trường", next: "scene0" }],
+      choices: [
+        {
+          id: "s0h_next",
+          label: "Đến trường",
+          next: "scene0",
+          resultLine: { speakerId: "minh", text: "Con đi học đây ạ." },
+        },
+      ],
     },
 
     scene0: {
@@ -94,7 +101,14 @@ export const MINH_LAN_SCENARIO: Scenario = {
         { speakerId: "minh", text: "(Mình cứ nghĩ cuộc sống sẽ lặp y như vậy…)" },
         { text: "Chiều đó, Minh ghé quán cà phê gần trường để học. Và lần đầu tiên, Minh gặp một ‘người lạ’." },
       ],
-      choices: [{ id: "s0_next", label: "Tiếp tục", next: "scene1" }],
+      choices: [
+        {
+          id: "s0_next",
+          label: "Tiếp tục",
+          next: "scene1",
+          resultLine: { speakerId: "minh", text: "Thôi kệ, tập trung học rồi tính tiếp." },
+        },
+      ],
     },
 
     scene1: {
@@ -174,7 +188,14 @@ export const MINH_LAN_SCENARIO: Scenario = {
         { speakerId: "minh", text: "(Mình còn chưa biết tên chị ấy… nhưng chị ấy đã muốn đi tiếp rất nhanh.)" },
         { text: "Minh do dự vài giây rồi mở điện thoại." },
       ],
-      choices: [{ id: "s1a_next", label: "Tiếp tục", next: "scene2r" }],
+      choices: [
+        {
+          id: "s1a_next",
+          label: "Tiếp tục",
+          next: "scene2r",
+          resultLine: { speakerId: "minh", text: "(Mọi thứ đang đi nhanh hơn mình nghĩ.)" },
+        },
+      ],
     },
 
     scene2r: {
@@ -193,14 +214,20 @@ export const MINH_LAN_SCENARIO: Scenario = {
         { text: "Minh bỗng thấy kỳ lạ: vừa nhẹ nhõm vì biết tên, vừa hồi hộp vì mọi thứ đang tiến nhanh." },
       ],
       choices: [
-        { id: "s2r_next", label: "Tiếp tục", next: "scene2", effect: { setNames: { lan: "Lan" } } },
+        {
+          id: "s2r_next",
+          label: "Tiếp tục",
+          next: "scene2",
+          effect: { setNames: { lan: "Lan" } },
+          resultLine: { speakerId: "minh", text: "Lan… giờ cái tên này không còn xa lạ nữa." },
+        },
       ],
     },
 
     scene2: {
       id: "scene2",
       kind: "scene",
-      backgroundId: "classroom",
+      backgroundId: "bedroomNight",
       title: "SCENE 2 – INSTAGRAM",
       body: [
         "Minh lướt Instagram như thói quen. Chưa kịp nghĩ nhiều, Lan đã rep story của Minh bằng một câu ngắn gọn nhưng đủ làm tim đập nhanh:",
@@ -245,7 +272,7 @@ export const MINH_LAN_SCENARIO: Scenario = {
     scene3: {
       id: "scene3",
       kind: "scene",
-      backgroundId: "classroom",
+      backgroundId: "bedroomNight",
       title: "SCENE 3 – TIN NHẮN 0H",
       body: [
         "Nửa đêm. Minh đang nằm lướt điện thoại, mắt đã mỏi nhưng vẫn chưa ngủ được.",
@@ -261,7 +288,13 @@ export const MINH_LAN_SCENARIO: Scenario = {
         { speakerId: "minh", text: "(Nếu mình trả lời ngay… liệu sau này đêm nào cũng vậy không?)" },
       ],
       choices: [
-        { id: "s3_a", label: "Rep ngay", next: "scene3a", effect: { stats: { E: 10, S: -5 } } },
+        {
+          id: "s3_a",
+          label: "Rep ngay",
+          next: "scene3a",
+          effect: { stats: { E: 10, S: -5 } },
+          resultLine: { speakerId: "minh", text: "Em còn thức nè chị, chị muốn nói gì?" },
+        },
         {
           id: "s3_b",
           label: "Để sáng trả lời",
@@ -299,7 +332,14 @@ export const MINH_LAN_SCENARIO: Scenario = {
         { speakerId: "minh", text: "(Mình sợ nhất không phải bị mọi người biết… mà là bị người kia giận.)" },
         { text: "Chuông vào tiết vang lên. Minh cất điện thoại, nhưng tay vẫn vô thức chạm vào túi áo." },
       ],
-      choices: [{ id: "s3a_next", label: "Tiếp tục", next: "scene4" }],
+      choices: [
+        {
+          id: "s3a_next",
+          label: "Tiếp tục",
+          next: "scene4",
+          resultLine: { speakerId: "minh", text: "(Mình cần tỉnh táo hơn từ bây giờ.)" },
+        },
+      ],
     },
 
     scene4: {
@@ -326,6 +366,7 @@ export const MINH_LAN_SCENARIO: Scenario = {
           next: "scene5",
           effect: { stats: { E: 15, T: 10, S: -20 }, flags: { red: 1 } },
           note: "🔴",
+          resultLine: { speakerId: "minh", text: "Vậy tối nay mình gặp nhé chị." },
         },
         {
           id: "s4_b",
@@ -335,7 +376,16 @@ export const MINH_LAN_SCENARIO: Scenario = {
           note: "🟢",
           resultLine: { speakerId: "minh", text: "Mình chọn chỗ đông người và ban ngày cho an toàn hơn." },
         },
-        { id: "s4_c", label: "Từ chối", next: "scene5", effect: { stats: { S: 10, T: -5 } } },
+        {
+          id: "s4_c",
+          label: "Từ chối",
+          next: "scene5decline",
+          effect: { stats: { S: 10, T: -5 } },
+          resultLine: {
+            speakerId: "minh",
+            text: "Hôm nay em chưa sẵn sàng đi gặp riêng. Mình nói chuyện sau nhé.",
+          },
+        },
         {
           id: "s4_d",
           label: "Hỏi rõ lý do",
@@ -375,6 +425,7 @@ export const MINH_LAN_SCENARIO: Scenario = {
           next: "scene6",
           effect: { stats: { E: 8, S: 8 }, flags: { green: 1 } },
           note: "🟢",
+          resultLine: { speakerId: "minh", text: "Em vui khi gặp chị, nhưng mình cứ chậm rãi thôi nhé." },
         },
         {
           id: "s5safe_b",
@@ -382,12 +433,14 @@ export const MINH_LAN_SCENARIO: Scenario = {
           next: "scene6",
           effect: { stats: { A: 12, S: 10 }, flags: { green: 1 } },
           note: "🟢",
+          resultLine: { speakerId: "minh", text: "Em muốn rõ ràng từ đầu để cả hai đều thoải mái." },
         },
         {
           id: "s5safe_c",
           label: "Im lặng cho qua",
           next: "scene6",
           effect: { stats: { T: 5 } },
+          resultLine: { speakerId: "minh", text: "(Thôi tạm cho qua… chắc chưa cần nói lúc này.)" },
         },
       ],
     },
@@ -417,6 +470,7 @@ export const MINH_LAN_SCENARIO: Scenario = {
           next: "scene6",
           effect: { stats: { E: 20, S: -15 }, flags: { red: 1 } },
           note: "🔴",
+          resultLine: { speakerId: "minh", text: "(Mình chiều theo… dù trong lòng vẫn hơi chênh.)" },
         },
         {
           id: "s5_b",
@@ -424,8 +478,68 @@ export const MINH_LAN_SCENARIO: Scenario = {
           next: "scene6",
           effect: { stats: { A: 15, S: 10 }, flags: { green: 1 } },
           note: "🟢",
+          resultLine: { speakerId: "minh", text: "Mình nói rõ cảm giác của nhau trước nhé chị." },
         },
-        { id: "s5_c", label: "Rút tay", next: "scene6", effect: { stats: { S: 15, E: -5 } } },
+        {
+          id: "s5_c",
+          label: "Rút tay",
+          next: "scene6",
+          effect: { stats: { S: 15, E: -5 } },
+          resultLine: { speakerId: "minh", text: "Xin lỗi chị… em chưa sẵn sàng." },
+        },
+      ],
+    },
+
+    scene5decline: {
+      id: "scene5decline",
+      kind: "scene",
+      backgroundId: "bedroom",
+      title: "SCENE 5 – CHƯA SẴN SÀNG ĐI GẶP",
+      body: [
+        "Minh chọn từ chối cuộc hẹn tối đó.",
+        "Không có buổi gặp trực tiếp, nhưng cảm giác nặng nề vẫn ở lại vì Minh lo Lan sẽ nghĩ mình xa cách.",
+        "Lan nhắn nhiều hơn bình thường, xen giữa quan tâm là những câu khiến Minh thấy áp lực phải giải thích.",
+      ],
+      lines: [
+        { text: "Tối đó Minh ở nhà. Không có cuộc hẹn nào diễn ra." },
+        { speakerId: "lan", text: "Sao em né chị vậy?" },
+        { speakerId: "minh", text: "Em chỉ chưa sẵn sàng gặp riêng thôi." },
+        { speakerId: "lan", text: "Ừ… chị hiểu. Nhưng chị không thích cảm giác bị từ chối." },
+        { speakerId: "minh", text: "(Mình đã nói rõ ranh giới, nhưng cảm giác tội lỗi vẫn kéo tới.)" },
+      ],
+      choices: [
+        {
+          id: "s5d_a",
+          label: "Giữ vững quyết định",
+          next: "scene6",
+          effect: { stats: { S: 10, A: 5 }, flags: { green: 1 } },
+          note: "🟢",
+          resultLine: {
+            speakerId: "minh",
+            text: "Mình không sai khi đặt ranh giới. Người phù hợp sẽ tôn trọng điều đó.",
+          },
+        },
+        {
+          id: "s5d_b",
+          label: "Nhượng bộ để làm vừa lòng",
+          next: "scene6",
+          effect: { stats: { T: 10, S: -10 }, flags: { red: 1 } },
+          note: "🔴",
+          resultLine: {
+            speakerId: "minh",
+            text: "Thôi thì chiều ý chị ấy một chút… chắc sẽ đỡ căng hơn.",
+          },
+        },
+        {
+          id: "s5d_c",
+          label: "Nói rõ cần thời gian",
+          next: "scene6",
+          effect: { stats: { A: 10, S: 5 } },
+          resultLine: {
+            speakerId: "minh",
+            text: "Em cần thêm thời gian để hiểu rõ cảm xúc của mình, mong chị tôn trọng.",
+          },
+        },
       ],
     },
 
@@ -442,7 +556,7 @@ export const MINH_LAN_SCENARIO: Scenario = {
         "Minh phải phân biệt: cái gì đáng giữ cho riêng mình, và cái gì không nên bị buộc phải giấu.",
       ],
       lines: [
-        { text: "Buổi tối hôm đó, Minh về nhà muộn hơn thường lệ." },
+        { text: "Buổi tối hôm đó, Minh ở trong phòng và điện thoại rung liên tục." },
         { speakerId: "me", text: "Con ăn gì chưa? Mẹ hâm cơm nhé." },
         { speakerId: "minh", text: "Dạ… con ăn rồi ạ." },
         { text: "Điện thoại rung. Lan nhắn liên tục, rồi gọi video." },
@@ -455,18 +569,59 @@ export const MINH_LAN_SCENARIO: Scenario = {
         {
           id: "s6_a",
           label: "Đồng ý",
-          next: "scene7",
+          next: "scene6_bridge",
           effect: { stats: { T: 10, R: -10 }, flags: { red: 1 } },
           note: "🔴",
+          resultLine: {
+            speakerId: "minh",
+            text: "…Ừ, em sẽ không kể ai.",
+          },
         },
         {
           id: "s6_b",
           label: "Không thoải mái",
-          next: "scene7",
+          next: "scene6_bridge",
           effect: { stats: { A: 10 } },
           note: "🟢",
+          resultLine: {
+            speakerId: "minh",
+            text: "Em không thoải mái khi phải giữ bí mật kiểu này.",
+          },
         },
-        { id: "s6_c", label: "Lưỡng lự", next: "scene7", effect: { stats: { T: 5 } } },
+        {
+          id: "s6_c",
+          label: "Lưỡng lự",
+          next: "scene6_bridge",
+          effect: { stats: { T: 5 } },
+          resultLine: {
+            speakerId: "minh",
+            text: "Để em nghĩ thêm… giờ em rối quá.",
+          },
+        },
+      ],
+    },
+
+    scene6_bridge: {
+      id: "scene6_bridge",
+      kind: "scene",
+      backgroundId: "bedroom",
+      title: "SCENE 6.5 – ĐÊM DÀI",
+      body: [
+        "Cuộc trò chuyện kết thúc nhưng cảm giác nặng nề vẫn còn trong phòng.",
+        "Minh nằm nhìn trần nhà rất lâu, tự hỏi đâu là ranh giới mình cần giữ.",
+      ],
+      lines: [
+        { text: "Đêm đó, Minh trằn trọc rất lâu, đầu óc cứ lặp lại cuộc trò chuyện vừa rồi." },
+        { speakerId: "minh", text: "(Mình cần bình tĩnh lại, rồi mai sẽ nhìn mọi thứ rõ hơn.)" },
+        { text: "Sáng hôm sau, Minh đến trường với cảm giác vừa mệt vừa căng." },
+      ],
+      choices: [
+        {
+          id: "s6b_next",
+          label: "Đến trường",
+          next: "scene7",
+          resultLine: { speakerId: "minh", text: "Thôi, tới trường rồi tính tiếp." },
+        },
       ],
     },
 
@@ -492,14 +647,54 @@ export const MINH_LAN_SCENARIO: Scenario = {
         { speakerId: "minh", text: "(Nghe thì khó chịu… nhưng tụi nó đâu nói sai.)" },
       ],
       choices: [
-        { id: "s7_a", label: "Bỏ qua", next: "scene8", effect: { stats: { A: -5 }, flags: { red: 1 } }, note: "🔴" },
-        { id: "s7_b", label: "Nghe thử", next: "scene8", effect: { stats: { A: 10 } }, note: "🟢" },
+        {
+          id: "s7_a",
+          label: "Bỏ qua",
+          next: "scene8",
+          effect: { stats: { A: -5 }, flags: { red: 1 } },
+          note: "🔴",
+          resultLine: { speakerId: "minh", text: "Thôi bỏ đi, tao không muốn nghe thêm nữa." },
+        },
+        {
+          id: "s7_b",
+          label: "Nghe thử",
+          next: "scene8",
+          effect: { stats: { A: 10 } },
+          note: "🟢",
+          resultLine: { speakerId: "minh", text: "Ừ, nói tiếp đi. Tao sẽ nghe cho rõ." },
+        },
         {
           id: "s7_c",
           label: "Cắt liên lạc Huy",
-          next: "scene8",
-          effect: { stats: { R: -10 }, flags: { red: 1 } },
+          next: "scene7_cutoff",
+          effect: { stats: { R: -10 }, flags: { red: 1, cutHuy: 1 } },
           note: "🔴",
+          resultLine: { speakerId: "minh", text: "Từ giờ đừng xen vào chuyện của tao nữa." },
+        },
+      ],
+    },
+
+    scene7_cutoff: {
+      id: "scene7_cutoff",
+      kind: "scene",
+      backgroundId: "classroom",
+      title: "SCENE 7.5 – CẮT LIÊN LẠC",
+      body: [
+        "Sau câu nói gắt của Minh, không khí ngoài hành lang chùng xuống.",
+        "Cuộc nói chuyện chuyển thành cãi vã ngắn, ai cũng mang cảm giác bị tổn thương.",
+      ],
+      lines: [
+        { speakerId: "huy", text: "Tao chỉ lo cho mày thôi, không phải muốn kiểm soát mày." },
+        { speakerId: "minh", text: "Lo kiểu này làm tao ngộp. Từ giờ đừng nhắn tao nữa." },
+        { speakerId: "tuan", text: "Minh, bình tĩnh đã. Bọn tao chỉ muốn tốt cho mày thôi." },
+        { speakerId: "minh", text: "(Mình vừa tự cắt đi một chỗ dựa… nhưng lúc này mình chỉ muốn im lặng.)" },
+      ],
+      choices: [
+        {
+          id: "s7c_next",
+          label: "Rời đi",
+          next: "scene8",
+          resultLine: { text: "Minh quay đi, để lại phía sau một khoảng im lặng khó chịu." },
         },
       ],
     },
@@ -524,9 +719,43 @@ export const MINH_LAN_SCENARIO: Scenario = {
         { text: "Minh cảm nhận rõ áp lực: mỗi phản ứng nhỏ đều có thể dẫn tới cãi vã." },
       ],
       choices: [
-        { id: "s8_a", label: "Chiều theo", next: "scene9", effect: { stats: { T: 10, S: -10 }, flags: { red: 1 } }, note: "🔴" },
-        { id: "s8_b", label: "Giải thích", next: "scene9", effect: { stats: { A: 10 }, flags: { green: 1 } }, note: "🟢" },
-        { id: "s8_c", label: "Cãi lại", next: "scene9", effect: { stats: { R: -5 } } },
+        {
+          id: "s8_a",
+          label: "Chiều theo",
+          next: "scene9",
+          effect: { stats: { T: 10, S: -10 }, flags: { red: 1 } },
+          note: "🔴",
+          resultLines: [
+            { speakerId: "minh", text: "Ừ… em xin lỗi, em sẽ ưu tiên chị trước." },
+            { speakerId: "lan", text: "Vậy mới ngoan. Chị chỉ cần em như thế thôi." },
+          ],
+        },
+        {
+          id: "s8_b",
+          label: "Giải thích",
+          next: "scene9",
+          effect: { stats: { A: 10 }, flags: { green: 1 } },
+          note: "🟢",
+          resultLines: [
+            { speakerId: "minh", text: "Em vẫn quan tâm chị, nhưng em cũng cần thời gian cho việc học." },
+            { speakerId: "lan", text: "Ừ… chị nghe. Chỉ là chị sợ bị em bỏ rơi thôi." },
+          ],
+        },
+        {
+          id: "s8_c",
+          label: "Cãi lại",
+          next: "scene9",
+          effect: { stats: { R: -5 } },
+          resultLines: [
+            { speakerId: "minh", text: "Chị đừng kiểm soát em như vậy nữa!" },
+            { speakerId: "lan", text: "Em lớn tiếng với chị luôn à? Chị chỉ đang lo cho em thôi mà." },
+            { speakerId: "minh", text: "Lo không có nghĩa là bắt em báo từng phút em làm gì." },
+            { speakerId: "lan", text: "Vì em cứ mập mờ nên chị mới phải hỏi tới vậy!" },
+            { speakerId: "minh", text: "Em mệt vì lúc nào cũng phải chứng minh mình không làm sai." },
+            { speakerId: "lan", text: "Nếu em thấy ngột ngạt đến thế thì chắc chị cũng chẳng còn gì để nói." },
+            { speakerId: "minh", text: "(Mình run tay, nhưng cũng không muốn nuốt lại những gì vừa nói.)" },
+          ],
+        },
         {
           id: "s8_d",
           label: "Phân tích hành vi",
@@ -534,6 +763,13 @@ export const MINH_LAN_SCENARIO: Scenario = {
           effect: { stats: { A: 15 } },
           requires: { route: { id: "aware", is: true } },
           note: "🔒",
+          resultLines: [
+            {
+              speakerId: "minh",
+              text: "Ghen là cảm xúc, nhưng ép em chứng minh liên tục là kiểm soát, không phải quan tâm.",
+            },
+            { speakerId: "lan", text: "…Được, chị nghe em. Để chị nghĩ lại." },
+          ],
         },
       ],
     },
@@ -552,15 +788,96 @@ export const MINH_LAN_SCENARIO: Scenario = {
       lines: [
         { text: "Một tuần kiểm tra giữa kỳ đến gần." },
         { speakerId: "co_ha", text: "Minh, kết quả kiểm tra gần đây của em giảm khá nhiều." },
-        { speakerId: "co_ha", text: "Nếu có chuyện riêng, em có thể trao đổi. Đừng ôm một mình." },
-        { speakerId: "minh", text: "Dạ… em sẽ cố cân bằng lại ạ." },
-        { speakerId: "tuan", text: "Tối nay học nhóm nhé. Mày bỏ buổi nào là tao gọi tận nhà đó." },
-        { speakerId: "minh", text: "(Mình đang bị kéo theo một thứ làm mình rời xa chính mình.)" },
+        { speakerId: "co_ha", text: "Cô không chỉ nhìn điểm số, cô còn thấy dạo này em thường xuyên mệt và mất tập trung." },
+        { speakerId: "co_ha", text: "Nếu có chuyện gì đang làm em áp lực, em có thể nói với cô theo mức em thấy an toàn." },
+        { speakerId: "minh", text: "Dạ… em hơi rối một chút, nhưng em chưa biết bắt đầu từ đâu." },
+        { speakerId: "co_ha", text: "Không cần kể hết ngay. Em chỉ cần nói: em có đang thấy an toàn với nhịp sống hiện tại không?" },
+        { speakerId: "minh", text: "Thật ra là… không ạ. Em thấy lúc nào cũng phải phản hồi, phải giải thích." },
+        { speakerId: "co_ha", text: "Cảm giác đó rất mệt. Em không có lỗi khi cần thời gian cho bản thân và việc học." },
+        { speakerId: "co_ha", text: "Nếu cần, cô sẽ giúp em lập một kế hoạch nhỏ: giờ học, giờ nghỉ, và cách từ chối khéo khi em quá tải." },
+        { speakerId: "minh", text: "Dạ… em cảm ơn cô. Nghe vậy em thấy đỡ ngộp hơn." },
+        { text: "Tan tiết, Tuân chờ Minh ở cửa lớp, mặt căng hơn thường ngày." },
+        { speakerId: "tuan", text: "Mày ổn thật không? Mấy tuần nay mày cứ lơ lửng như người mất ngủ dài ngày." },
+        { speakerId: "minh", text: "Tao ổn… chắc vậy." },
+        { speakerId: "tuan", text: "Đừng trả lời kiểu đó. Tao hỏi vì tao lo, không phải vì tò mò." },
+        { speakerId: "tuan", text: "Tối nay học nhóm nhé. Mày bỏ buổi nào là tao với Huy qua tận nhà lôi đi." },
+        { speakerId: "minh", text: "Mày làm quá rồi đó." },
+        { speakerId: "tuan", text: "Ừ, tao làm quá. Vì tao không muốn nhìn mày tự chìm tiếp." },
+        { speakerId: "minh", text: "(Mình đang bị kéo theo một thứ làm mình rời xa chính mình… nhưng ít nhất vẫn còn người kéo mình lại.)" },
       ],
       choices: [
-        { id: "s9_a", label: "Bỏ học đi chơi", next: "scene9a", effect: { stats: { R: -15 }, flags: { red: 1 } }, note: "🔴" },
-        { id: "s9_b", label: "Cân bằng lại", next: "scene9a", effect: { stats: { S: 10, R: 10 }, flags: { green: 1 } }, note: "🟢" },
-        { id: "s9_c", label: "Giấu gia đình", next: "scene9a", effect: { stats: { S: -5 } } },
+        {
+          id: "s9_a",
+          label: "Bỏ học đi chơi",
+          next: "scene9a_gate",
+          effect: { stats: { R: -15 }, flags: { red: 1 } },
+          note: "🔴",
+          resultLine: { speakerId: "minh", text: "Chắc nghỉ một buổi không sao… mình đi gặp chị ấy vậy." },
+        },
+        {
+          id: "s9_b",
+          label: "Cân bằng lại",
+          next: "scene9a_gate",
+          effect: { stats: { S: 10, R: 10 }, flags: { green: 1 } },
+          note: "🟢",
+          resultLine: { speakerId: "minh", text: "Mình sẽ học trước, chuyện tình cảm để sau." },
+        },
+        {
+          id: "s9_c",
+          label: "Giấu gia đình",
+          next: "scene9a_gate",
+          effect: { stats: { S: -5 } },
+          resultLine: { speakerId: "minh", text: "(Thôi cứ im lặng, nói ra chỉ rắc rối thêm.)" },
+        },
+      ],
+    },
+
+    scene9a_gate: {
+      id: "scene9a_gate",
+      kind: "scene",
+      backgroundId: "classroom",
+      title: "SCENE 9A0 – TRƯỚC BUỔI HỌC NHÓM",
+      body: [
+        "Tin nhắn học nhóm của Tuân đến đúng lúc Minh đang rối.",
+        "Chỉ một quyết định nhỏ tối nay cũng có thể kéo Minh về nhịp ổn định, hoặc đẩy Minh trượt xa hơn.",
+      ],
+      lines: [
+        { text: "Chiều muộn, điện thoại Minh rung lên: tin nhắn học nhóm của Tuân." },
+        { speakerId: "tuan", text: "Tối nay qua nhà tao học nhóm nhé. Đừng sủi kèo." },
+        { speakerId: "minh", text: "(Mình đi học nhóm để kéo bản thân lại… hay lại chạy theo Lan như mọi lần?)" },
+      ],
+      choices: [
+        {
+          id: "s9g_reconcile",
+          label: "Đi học nhóm và nói chuyện với Huy trước khi vào học",
+          next: "scene9a",
+          requires: { flag: { key: "cutHuy", op: ">=", value: 1 } },
+          resultLines: [
+            { speakerId: "minh", text: "Huy… chuyện hôm trước, tao nóng quá. Tao xin lỗi." },
+            { speakerId: "huy", text: "Ừ, tao cũng không giận mãi đâu. Tao chỉ sợ mày tự làm đau mày thôi." },
+            { speakerId: "minh", text: "Cảm ơn mày vì vẫn ở đây." },
+            { speakerId: "tuan", text: "Thôi hai ông làm hòa xong thì vào học, trễ giờ rồi." },
+          ],
+        },
+        {
+          id: "s9g_join",
+          label: "Đi học nhóm",
+          next: "scene9a",
+          requires: { flag: { key: "cutHuy", op: "==", value: 0 } },
+          resultLine: { text: "Minh hít sâu rồi bước vào phòng học nhóm." },
+        },
+        {
+          id: "s9g_decline",
+          label: "Từ chối học nhóm, đi gặp Lan",
+          next: "scene10",
+          effect: { stats: { S: -10, R: -10, T: 10 }, flags: { red: 1 } },
+          note: "🔴",
+          resultLines: [
+            { speakerId: "minh", text: "Tối nay tao bận, chắc không qua học nhóm được." },
+            { speakerId: "tuan", text: "Lại bận vì Lan nữa hả? Mày đang tự bỏ rơi chính mày đó." },
+            { speakerId: "minh", text: "(Mình biết Tuân nói đúng… nhưng vẫn quay đi.)" },
+          ],
+        },
       ],
     },
 
@@ -583,7 +900,14 @@ export const MINH_LAN_SCENARIO: Scenario = {
         { speakerId: "minh", text: "(Mình nghe mà thấy nhói. Vì mình biết họ nói đúng.)" },
         { text: "Minh hít sâu. Lần đầu tiên, Minh thử để điện thoại yên thêm 10 phút." },
       ],
-      choices: [{ id: "s9a_next", label: "Tiếp tục", next: "scene10" }],
+      choices: [
+        {
+          id: "s9a_next",
+          label: "Tiếp tục",
+          next: "scene10",
+          resultLine: { speakerId: "minh", text: "(Mình cần giữ nhịp này, không thể để mọi thứ trôi tuột nữa.)" },
+        },
+      ],
     },
 
     scene10: {
@@ -612,6 +936,7 @@ export const MINH_LAN_SCENARIO: Scenario = {
           next: "scene11",
           effect: { stats: { E: 20, S: -25, A: -10 }, flags: { red: 1 } },
           note: "🔴",
+          resultLine: { speakerId: "minh", text: "…Ừ, nếu chị muốn vậy thì em đồng ý." },
         },
         {
           id: "s10_b",
@@ -619,8 +944,15 @@ export const MINH_LAN_SCENARIO: Scenario = {
           next: "scene11",
           effect: { stats: { A: 20, S: 10 }, flags: { green: 1 } },
           note: "🟢",
+          resultLine: { speakerId: "minh", text: "Em muốn tìm hiểu kỹ trước khi quyết định." },
         },
-        { id: "s10_c", label: "Từ chối", next: "scene11", effect: { stats: { S: 15, E: -10 } } },
+        {
+          id: "s10_c",
+          label: "Từ chối",
+          next: "scene11",
+          effect: { stats: { S: 15, E: -10 } },
+          resultLine: { speakerId: "minh", text: "Không, em chưa sẵn sàng cho chuyện đó." },
+        },
         {
           id: "s10_d",
           label: "Tra cứu kỹ",
@@ -628,6 +960,10 @@ export const MINH_LAN_SCENARIO: Scenario = {
           effect: { stats: { A: 25 } },
           requires: { route: { id: "aware", is: true } },
           note: "🔒",
+          resultLine: {
+            speakerId: "minh",
+            text: "Em cần hiểu rõ về đồng thuận và rủi ro trước khi nói tiếp.",
+          },
         },
       ],
     },
@@ -650,9 +986,29 @@ export const MINH_LAN_SCENARIO: Scenario = {
         { speakerId: "minh", text: "(Nếu mình không nói cho ai biết, lúc có chuyện thì sao?)" },
       ],
       choices: [
-        { id: "s11_a", label: "Đi mà không nói ai", next: "scene12", effect: { stats: { E: 15, S: -20 }, flags: { red: 1 } }, note: "🔴" },
-        { id: "s11_b", label: "Báo gia đình", next: "scene12", effect: { stats: { S: 15, A: 5 }, flags: { green: 1 } }, note: "🟢" },
-        { id: "s11_c", label: "Không đi", next: "scene12", effect: { stats: { S: 10 } } },
+        {
+          id: "s11_a",
+          label: "Đi mà không nói ai",
+          next: "scene12",
+          effect: { stats: { E: 15, S: -20 }, flags: { red: 1 } },
+          note: "🔴",
+          resultLine: { speakerId: "minh", text: "Dạ… để em thu xếp, mình đi riêng thôi." },
+        },
+        {
+          id: "s11_b",
+          label: "Báo gia đình",
+          next: "scene12",
+          effect: { stats: { S: 15, A: 5 }, flags: { green: 1 } },
+          note: "🟢",
+          resultLine: { speakerId: "minh", text: "Em sẽ báo nhà biết lịch trình, cho yên tâm cả hai bên." },
+        },
+        {
+          id: "s11_c",
+          label: "Không đi",
+          next: "scene12",
+          effect: { stats: { S: 10 } },
+          resultLine: { speakerId: "minh", text: "Cuối tuần này em không đi được đâu chị." },
+        },
       ],
     },
 
@@ -674,9 +1030,30 @@ export const MINH_LAN_SCENARIO: Scenario = {
         { speakerId: "minh", text: "(Mình không muốn thừa nhận, nhưng mình đang sợ phản ứng của chị ấy.)" },
       ],
       choices: [
-        { id: "s12_a", label: "Bỏ qua", next: "scene13", effect: { stats: { E: 10, A: -10 }, flags: { red: 1 } }, note: "🔴" },
-        { id: "s12_b", label: "Hỏi thẳng", next: "scene13", effect: { stats: { A: 10 }, flags: { green: 1 } }, note: "🟢" },
-        { id: "s12_c", label: "Theo dõi", next: "scene13", effect: { stats: { S: -5 }, flags: { red: 1 } }, note: "🔴" },
+        {
+          id: "s12_a",
+          label: "Bỏ qua",
+          next: "scene13",
+          effect: { stats: { E: 10, A: -10 }, flags: { red: 1 } },
+          note: "🔴",
+          resultLine: { speakerId: "minh", text: "(Chắc mình đang nghĩ quá lên thôi…)" },
+        },
+        {
+          id: "s12_b",
+          label: "Hỏi thẳng",
+          next: "scene13",
+          effect: { stats: { A: 10 }, flags: { green: 1 } },
+          note: "🟢",
+          resultLine: { speakerId: "minh", text: "Chị nói thật với em đi, chị đang mong điều gì ở mối quan hệ này?" },
+        },
+        {
+          id: "s12_c",
+          label: "Theo dõi",
+          next: "scene13",
+          effect: { stats: { S: -5 }, flags: { red: 1 } },
+          note: "🔴",
+          resultLine: { speakerId: "minh", text: "(Mình sẽ im lặng quan sát thêm một thời gian.)" },
+        },
       ],
     },
 
@@ -698,8 +1075,22 @@ export const MINH_LAN_SCENARIO: Scenario = {
         { text: "Minh thấy tim đập nhanh, tay lạnh đi. Đây không còn là trò đùa." },
       ],
       choices: [
-        { id: "s13_a", label: "Cho xem", next: "scene14", effect: { stats: { S: -10 }, flags: { red: 1 } }, note: "🔴" },
-        { id: "s13_b", label: "Từ chối", next: "scene14", effect: { stats: { S: 15 }, flags: { green: 1 } }, note: "🟢" },
+        {
+          id: "s13_a",
+          label: "Cho xem",
+          next: "scene14",
+          effect: { stats: { S: -10 }, flags: { red: 1 } },
+          note: "🔴",
+          resultLine: { speakerId: "minh", text: "…Được rồi, chị xem nhanh thôi nhé." },
+        },
+        {
+          id: "s13_b",
+          label: "Từ chối",
+          next: "scene14",
+          effect: { stats: { S: 15 }, flags: { green: 1 } },
+          note: "🟢",
+          resultLine: { speakerId: "minh", text: "Không, điện thoại là quyền riêng tư của em." },
+        },
         {
           id: "s13_c",
           label: "Phản biện",
@@ -707,6 +1098,10 @@ export const MINH_LAN_SCENARIO: Scenario = {
           effect: { stats: { A: 15, T: -10 } },
           requires: { stat: { key: "A", op: ">=", value: 60 } },
           note: "🔒",
+          resultLine: {
+            speakerId: "minh",
+            text: "Tin tưởng không thể được xây bằng việc kiểm tra nhau.",
+          },
         },
       ],
     },
@@ -730,9 +1125,29 @@ export const MINH_LAN_SCENARIO: Scenario = {
         { speakerId: "huy", text: "Mày không nợ ai bằng chứng để được tôn trọng." },
       ],
       choices: [
-        { id: "s14_a", label: "Đồng ý", next: "scene15", effect: { stats: { E: 20, S: -20, A: -10 }, flags: { red: 1 } }, note: "🔴" },
-        { id: "s14_b", label: "Từ chối", next: "scene15", effect: { stats: { S: 15, A: 10 }, flags: { green: 1 } }, note: "🟢" },
-        { id: "s14_c", label: "Trì hoãn", next: "scene15", effect: { stats: { E: -5 } } },
+        {
+          id: "s14_a",
+          label: "Đồng ý",
+          next: "scene15",
+          effect: { stats: { E: 20, S: -20, A: -10 }, flags: { red: 1 } },
+          note: "🔴",
+          resultLine: { speakerId: "minh", text: "Được… em sẽ làm theo ý chị." },
+        },
+        {
+          id: "s14_b",
+          label: "Từ chối",
+          next: "scene15",
+          effect: { stats: { S: 15, A: 10 }, flags: { green: 1 } },
+          note: "🟢",
+          resultLine: { speakerId: "minh", text: "Không. Em không cần chứng minh bằng cách vượt ranh giới của mình." },
+        },
+        {
+          id: "s14_c",
+          label: "Trì hoãn",
+          next: "scene15",
+          effect: { stats: { E: -5 } },
+          resultLine: { speakerId: "minh", text: "Cho em thêm thời gian, giờ em chưa thể trả lời." },
+        },
       ],
     },
 
@@ -754,9 +1169,29 @@ export const MINH_LAN_SCENARIO: Scenario = {
         { speakerId: "minh", text: "(Có lẽ mình đã cố mạnh mẽ sai cách: tự chịu đựng một mình.)" },
       ],
       choices: [
-        { id: "s15_a", label: "Tìm người giúp", next: "scene15a", effect: { stats: { A: 15, S: 10 }, flags: { green: 1 } }, note: "🟢" },
-        { id: "s15_b", label: "Giữ trong lòng", next: "scene15a", effect: { stats: { E: 10 }, flags: { red: 1 } }, note: "🔴" },
-        { id: "s15_c", label: "Đổ lỗi", next: "scene15a", effect: { stats: { R: -10 } } },
+        {
+          id: "s15_a",
+          label: "Tìm người giúp",
+          next: "scene15a",
+          effect: { stats: { A: 15, S: 10 }, flags: { green: 1 } },
+          note: "🟢",
+          resultLine: { speakerId: "minh", text: "Mẹ ơi… con cần được giúp, con không muốn chịu một mình nữa." },
+        },
+        {
+          id: "s15_b",
+          label: "Giữ trong lòng",
+          next: "scene15a",
+          effect: { stats: { E: 10 }, flags: { red: 1 } },
+          note: "🔴",
+          resultLine: { speakerId: "minh", text: "Không sao đâu mẹ, con ổn mà." },
+        },
+        {
+          id: "s15_c",
+          label: "Đổ lỗi",
+          next: "scene15a",
+          effect: { stats: { R: -10 } },
+          resultLine: { speakerId: "minh", text: "Chắc tại con yếu đuối nên mới thành ra vậy…" },
+        },
       ],
     },
 
@@ -779,7 +1214,14 @@ export const MINH_LAN_SCENARIO: Scenario = {
         { speakerId: "minh", text: "(Nghe đơn giản… nhưng sao mình lại quên điều đó?)" },
         { speakerId: "co_ha", text: "Nếu em muốn, cô sẽ giúp em nghĩ các bước cụ thể để bảo vệ mình." },
       ],
-      choices: [{ id: "s15a_next", label: "Tiếp tục", next: "scene16" }],
+      choices: [
+        {
+          id: "s15a_next",
+          label: "Tiếp tục",
+          next: "scene16",
+          resultLine: { speakerId: "minh", text: "(Lần đầu tiên mình thấy có đường ra.)" },
+        },
+      ],
     },
 
     scene16: {
@@ -798,7 +1240,14 @@ export const MINH_LAN_SCENARIO: Scenario = {
         { speakerId: "bo", text: "Con sai cũng được. Quan trọng là con dừng kịp để sửa." },
         { speakerId: "minh", text: "(Mình không còn muốn sống trong cảm giác nơm nớp nữa.)" },
       ],
-      choices: [{ id: "s16_next", label: "Tiếp tục", next: "scene17" }],
+      choices: [
+        {
+          id: "s16_next",
+          label: "Tiếp tục",
+          next: "scene17",
+          resultLine: { speakerId: "minh", text: "Mình không thể quay lại cách cũ nữa." },
+        },
+      ],
     },
 
     scene17: {
@@ -820,14 +1269,28 @@ export const MINH_LAN_SCENARIO: Scenario = {
         { text: "Đến đây, quyết định không còn là chọn “ai đúng ai sai”, mà là chọn tương lai Minh muốn sống cùng." },
       ],
       choices: [
-        { id: "s17_a", label: "Tiếp tục", next: "endingAuto" },
-        { id: "s17_b", label: "Dừng", next: "endingAuto" },
+        {
+          id: "s17_a",
+          label: "Tiếp tục",
+          next: "endingAuto",
+          resultLine: { speakerId: "minh", text: "Mình sẽ đi tiếp, nhưng theo cách bảo vệ chính mình." },
+        },
+        {
+          id: "s17_b",
+          label: "Dừng",
+          next: "endingAuto",
+          resultLine: { speakerId: "minh", text: "Đủ rồi. Mình chọn dừng lại ở đây." },
+        },
         {
           id: "s17_c",
           label: "Đặt ranh giới",
           next: "endingAuto",
           requires: { stat: { key: "A", op: ">=", value: 60 } },
           note: "🔒",
+          resultLine: {
+            speakerId: "minh",
+            text: "Em tôn trọng chị, nhưng ranh giới của em là điều không thương lượng.",
+          },
         },
       ],
     },
@@ -841,7 +1304,7 @@ export const MINH_LAN_SCENARIO: Scenario = {
         "Có những khoảnh khắc, chỉ cần một lựa chọn thôi cũng đủ để thay đổi quỹ đạo của cả một năm học — thậm chí cả cách mình nhìn về tình yêu.",
         "Đang tổng hợp kết quả...",
       ],
-      choices: [{ id: "restart", label: "Chơi lại từ đầu", next: "scene1" }],
+      choices: [{ id: "restart", label: "Chơi lại từ đầu", next: "scene1", resultLine: { text: "Minh hít sâu, bắt đầu lại từ một điểm tỉnh táo hơn." } }],
     },
 
     endingGood: {
@@ -857,7 +1320,7 @@ export const MINH_LAN_SCENARIO: Scenario = {
         "",
         "Vẫn còn những ending khác. Bạn có muốn chơi lại để xem nếu mình chọn khác thì chuyện sẽ đi tới đâu không?",
       ],
-      choices: [{ id: "restart", label: "Chơi lại từ đầu (tìm ending khác)", next: "scene1" }],
+      choices: [{ id: "restart", label: "Chơi lại từ đầu (tìm ending khác)", next: "scene1", resultLine: { text: "Một lựa chọn khác có thể tạo ra một kết thúc khác." } }],
     },
     endingNeutral: {
       id: "endingNeutral",
@@ -871,7 +1334,7 @@ export const MINH_LAN_SCENARIO: Scenario = {
         "",
         "Vẫn còn những ending khác. Bạn có muốn chơi lại để thử một hướng đi tỉnh táo hơn không?",
       ],
-      choices: [{ id: "restart", label: "Chơi lại từ đầu", next: "scene1" }],
+      choices: [{ id: "restart", label: "Chơi lại từ đầu", next: "scene1", resultLine: { text: "Minh chọn thử lại với nhiều sự rõ ràng hơn." } }],
     },
     endingBad: {
       id: "endingBad",
@@ -885,7 +1348,7 @@ export const MINH_LAN_SCENARIO: Scenario = {
         "",
         "Nhưng câu chuyện chưa dừng ở đây. Bạn có thể chơi lại và thử đặt an toàn lên trước cảm xúc — để xem mọi thứ thay đổi ra sao.",
       ],
-      choices: [{ id: "restart", label: "Chơi lại từ đầu (thử hướng an toàn hơn)", next: "scene1" }],
+      choices: [{ id: "restart", label: "Chơi lại từ đầu (thử hướng an toàn hơn)", next: "scene1", resultLine: { text: "Bắt đầu lại, lần này ưu tiên an toàn trước cảm xúc." } }],
     },
     endingSecret: {
       id: "endingSecret",
@@ -899,7 +1362,7 @@ export const MINH_LAN_SCENARIO: Scenario = {
         "",
         "Vẫn còn những ending khác. Bạn muốn chơi lại để xem nếu mình ‘không nhận ra sớm’ thì câu chuyện sẽ khác thế nào không?",
       ],
-      choices: [{ id: "restart", label: "Chơi lại từ đầu", next: "scene1" }],
+      choices: [{ id: "restart", label: "Chơi lại từ đầu", next: "scene1", resultLine: { text: "Quay lại từ đầu, nhưng với trực giác được tin tưởng hơn." } }],
     },
     endingBadEarly: {
       id: "endingBadEarly",
@@ -913,7 +1376,7 @@ export const MINH_LAN_SCENARIO: Scenario = {
         "",
         "Bạn có muốn chơi lại từ đầu để thử giữ nhịp chậm hơn và đặt câu hỏi sớm hơn không?",
       ],
-      choices: [{ id: "restart", label: "Chơi lại từ đầu", next: "scene1" }],
+      choices: [{ id: "restart", label: "Chơi lại từ đầu", next: "scene1", resultLine: { text: "Thử lại một lần nữa để giữ nhịp chậm và chắc hơn." } }],
     },
   },
 
@@ -943,12 +1406,14 @@ export const MINH_LAN_SCENARIO: Scenario = {
           label: "Nói chuyện mỗi đêm",
           effect: { stats: { E: 15, S: -10 }, flags: { red: 1 } },
           note: "🔴",
+          resultLine: { speakerId: "minh", text: "Dạ, tối nào chị muốn nói chuyện em cũng được." },
         },
         {
           id: "qe1_b",
           label: "Giới hạn thời gian",
           effect: { stats: { A: 10, S: 10 }, flags: { green: 1 } },
           note: "🟢",
+          resultLine: { speakerId: "minh", text: "Em ngủ trước 11 giờ nhé, mai em còn học." },
         },
       ],
     },
@@ -977,12 +1442,14 @@ export const MINH_LAN_SCENARIO: Scenario = {
           label: "Thuận theo",
           effect: { stats: { E: 20, S: -20 }, flags: { red: 1 } },
           note: "🔴",
+          resultLine: { speakerId: "minh", text: "Thôi được… em nghe theo chị." },
         },
         {
           id: "qe2_b",
           label: "Thiết lập ranh giới",
           effect: { stats: { A: 15, S: 15 }, flags: { green: 1 } },
           note: "🟢",
+          resultLine: { speakerId: "minh", text: "Em cần chậm lại. Nếu chị tôn trọng em thì mình dừng ở đây." },
         },
       ],
     },
@@ -1010,6 +1477,7 @@ export const MINH_LAN_SCENARIO: Scenario = {
           label: "Chấp nhận",
           effect: { stats: { S: -15, R: -10 }, flags: { red: 1 } },
           note: "🔴",
+          resultLine: { speakerId: "minh", text: "Ừ… chắc em cũng không cần gặp tụi bạn nhiều nữa." },
         },
         {
           id: "qe3_b",
@@ -1017,6 +1485,7 @@ export const MINH_LAN_SCENARIO: Scenario = {
           effect: { stats: { A: 20 }, unlockRoutes: ["aware"] },
           requires: { stat: { key: "A", op: ">=", value: 50 } },
           note: "🔒",
+          resultLine: { speakerId: "minh", text: "Không, em không muốn bị tách khỏi những người luôn bên em." },
         },
       ],
     },
@@ -1031,7 +1500,14 @@ export const MINH_LAN_SCENARIO: Scenario = {
       when: { stat: { key: "A", op: ">=", value: 70 } },
       once: true,
       forced: true,
-      choices: [{ id: "qe4_ok", label: "Tiếp tục", effect: { stats: {} } }],
+      choices: [
+        {
+          id: "qe4_ok",
+          label: "Tiếp tục",
+          effect: { stats: {} },
+          resultLine: { speakerId: "minh", text: "Mình đã thấy rõ hơn rồi. Mình sẽ không tự lừa mình nữa." },
+        },
+      ],
     },
   ],
 

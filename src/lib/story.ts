@@ -75,7 +75,7 @@ export const PARTNER_TRAITS: Record<PartnerId, { name: string; vibe: string }> =
   A: { name: "A", vibe: "vui vẻ, năng động" },
   B: { name: "B", vibe: "học giỏi, điềm tĩnh" },
   C: { name: "C", vibe: "bí ẩn, ít nói" },
-};
+}; 
 
 export const INITIAL_STATS: Stats = {
   affection: 0,
